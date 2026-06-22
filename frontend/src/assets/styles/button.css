@@ -1,0 +1,22 @@
+@import './variables.css';
+
+.custom-button {   
+    width: 100%;
+    background-color: var(--primary-color-blue);
+    color: var(--primary-color-white);
+    border: none;
+    padding: var(--spacing-medium);
+    cursor: pointer;
+    font-size: var(--font-size-medium);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    margin: 0 auto;
+}
+.custom-button:hover {
+    background-color: var(--secondary-color-blue);
+}
