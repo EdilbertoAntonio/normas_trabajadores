@@ -44,14 +44,14 @@
 }
 
 .login-container p{
-    color: var(--primary-color-black);
+    /* color: var(--primary-color-black); */
     font-size: var(--font-size-medium);
-    /* margin: 0 0 10px 0; */
+    /* margin: 0 0 10px 0;  */
     margin: 0;
-    text-align: left;
-    /* align-items: center; */
-    width: 100%;
-    /* margin-left: 20px; */
+    /* text-align: left;
+    align-items: center;
+    width: 100%; 
+    margin-left: 20px; */
 }
 
 .login-form-elements {
@@ -69,6 +69,7 @@
     border: 1px solid var(--secondary-color-gray);
     border-radius: 10px;
     box-sizing: border-box;
+    /* margin-bottom: 0; */
 }
 
 .login-container input:focus{

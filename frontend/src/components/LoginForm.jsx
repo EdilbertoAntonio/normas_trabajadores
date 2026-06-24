@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from '../services/supabaseClient'; // Ajusta la ruta según donde lo guardaste
+import Button from '../components/Button';
+import Label from '../components/Label';
+import Input from '../components/Input';
 import '../assets/styles/login.css';
 
 export function LoginForm () {
@@ -9,8 +12,13 @@ export function LoginForm () {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false); 
 
     const navigate = useNavigate();
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     // 2. Función que se ejecuta al presionar "Acceder"
     const handleLogin = async (e) => {
@@ -27,13 +35,24 @@ export function LoginForm () {
         if (error) {
             setError("Correo o contraseña incorrectos.");
         } else {
-            console.log("¡Usuario conectado!", data.user);
+            console.log("¡Usuario conectado!"); // data.user
             // Aquí agregaremos la redirección a /Carga más adelante
             navigate('/Carga');
         }
         
         setLoading(false);
     };
+
+    const visibilityIcon = (
+        <i 
+            className="material-symbols-outlined" 
+            onClick={togglePasswordVisibility}
+            // Añadimos un título para accesibilidad
+            title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+        >
+            {showPassword ? 'visibility' : 'visibility_off'}
+        </i>
+    );
 
     return(
         <form className="login-container" onSubmit={handleLogin}>
@@ -42,10 +61,9 @@ export function LoginForm () {
             
             <div className="login-form-elements">
                 
-                
-
-                <p>Ingresa tu correo de auditor: </p>
-                <input
+                {/* <p>Ingresa tu correo de auditor: </p> */}
+                <Label>Ingresa tu correo de auditor:</Label>
+                <Input
                     type="email"
                     placeholder="auditor@ejemplo.com"
                     id="email"
@@ -54,21 +72,23 @@ export function LoginForm () {
                     required
                 />
 
-                <p>Ingresa tu contraseña: </p>
-                <input
-                    type="password"
+                {/* <p>Ingresa tu contraseña: </p> */}
+                <Label>Ingresa tu contraseña:</Label>
+                <Input
+                    type={showPassword ? "text" : "password"} 
                     placeholder="Tu contraseña"
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    iconRight={visibilityIcon}
                 />
 
-                {error && <p style={{ color: 'red' }}>{error}</p>}    
+                {error && <p className="message-error">{error}</p>}    
 
-                <button type="submit" disabled={loading}>
+                <Button type="submit" disabled={loading}>
                     {loading ? 'Cargando...' : 'Acceder'}
-                </button>
+                </Button>
 
             </div>
 

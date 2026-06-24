@@ -31,7 +31,7 @@ export function CargaForm ({}) {
                         // onChange={handleChange}
                         placeholder="Ejemplo: Juan Rodriguez"
                         // error={errors.startDate}
-                    />
+                    />  
                     {/* {errors.startDate && <p className="message-error">{errors.startDate}</p>} */}
                 </div>
 
@@ -40,7 +40,7 @@ export function CargaForm ({}) {
                         htmlFor="puestoTrabajador"
                         title="Escriba el puesto del trabajador que va a checar"
                     > 
-                        Actividad o puesto del trabajador
+                        Puesto del trabajador:
                     </Label>
                     <Input
                         type="text"
@@ -64,13 +64,22 @@ export function CargaForm ({}) {
                     </Label>
                     <Select
                         // type="text"
-                        id="nombreTrabajador"
+                        id="actividadTrabajador"
                         // value={values.startDate}
                         // onChange={handleChange}
                         placeholder="Ejemplo: "
                         // error={errors.startDate}
                     >
-                    
+                        <option>Levantamiento</option>
+                        <option>Descenso</option>
+                        <option>Transporte</option>
+                        <option>Carga en equipo</option>
+                        <option>Rodar</option>
+                        <option>Arrastrar</option>
+                        <option>Girar</option>
+                        <option>Empujar con equipo auxiliar (pequeño)</option>
+                        <option>Empujar con equipo auxiliar (mediano)</option>
+                        <option>Empujar con equipo auxiliar (grande)</option>
                     </Select>
                     {/* {errors.startDate && <p className="message-error">{errors.startDate}</p>} */}
                 </div>
@@ -116,7 +125,7 @@ export function CargaForm ({}) {
                 <div className="carga-input">
                     <Label 
                         htmlFor="frecuenciaCarga"
-                        title="Ingrese la frecuencia de la carga en "
+                        title="Ingrese la cantidad de veces que realiza la carga al día."
                     > 
                         Frecuencia de la carga:
                     </Label>

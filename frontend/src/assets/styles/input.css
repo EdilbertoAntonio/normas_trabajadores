@@ -2,19 +2,23 @@
 
 .input-container {
     position: relative; 
-    margin-bottom: var(--spacing-small);
+    /* margin-bottom: var(--spacing-small); */
+    width: 100%; /* Aseguramos que el contenedor ocupe todo el ancho para el posicionamiento absoluto */
+    display: flex; /* Ayuda con la alineación vertical */
+    align-items: center;
 }
 .input-container.no-margin {
     margin-bottom: 0;
 }
 .custom-input {
-    width: 80%;
+    width: 100%;
     padding: var(--spacing-medium);
     font-size: var(--font-size-medium);
     border: 1px solid var(--secondary-color-gray); 
     border-radius: 10px;
-    padding-right: 40px;
-    margin-bottom: var(--spacing-medium);
+    padding-right: 45px;
+    box-sizing: border-box;
+    /* margin-bottom: var(--spacing-medium); */
 }
 .custom-input.error {
     border-color: var(--error-color);
@@ -22,4 +26,19 @@
 .custom-input.error:focus {
     outline: none;
     box-shadow: 0 0 0 2px var(--secondary-error-color);
+}
+
+.input-icon-right {
+    position: absolute;
+    right: 15px; /* Posición horizontal desde el borde derecho */
+    top: 50%;
+    transform: translateY(-50%); /* Centrado vertical perfecto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* Indicar interactividad */
+    /*color: #757575; /* Un gris estándar para iconos de formularios */
+    color: var(--secondary-color-dark-gray); /* Si tienes esta variable definida en variables.css, es mejor usarla */
+    user-select: none; /* Prevenir la selección de texto al hacer click rápido */
+    z-index: 2; /* Asegurar que esté por encima del input */
 }

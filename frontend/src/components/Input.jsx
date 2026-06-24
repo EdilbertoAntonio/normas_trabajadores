@@ -1,7 +1,7 @@
 import React from 'react';
 import '../assets/styles/input.css';
 
-const Input = ({ type, placeholder, value, onChange, id, className='', error, readOnly = false, noMargin=false, ...props}) => {
+const Input = ({ type, placeholder, value, onChange, id, className='', error, readOnly = false, noMargin=false, iconRight, ...props}) => {
     return (
         <div className={`input-container ${noMargin ? 'no-margin' : ''}`}>
             <input
@@ -14,6 +14,11 @@ const Input = ({ type, placeholder, value, onChange, id, className='', error, re
                 readOnly={readOnly}
                 {...props}
             />
+            {iconRight && (
+                <div className="input-icon-right">
+                    {iconRight}
+                </div>
+            )}
         </div>
     );
 };
