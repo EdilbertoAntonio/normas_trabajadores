@@ -37,7 +37,7 @@ export function LoginForm () {
         } else {
             console.log("¡Usuario conectado!"); // data.user
             // Aquí agregaremos la redirección a /Carga más adelante
-            navigate('/Carga');
+            navigate('/Norma36');
         }
         
         setLoading(false);

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import '../assets/styles/sidebar.css';
 
 const SIDEBAR_ITEMS = [
-    { name: 'Norma de carga', icon: 'dashboard', to: '/Carga' },
+    { name: 'Formulario', icon: 'assignment', to: '/Norma36' },
 ];
 
 export const SideBar = () => {
