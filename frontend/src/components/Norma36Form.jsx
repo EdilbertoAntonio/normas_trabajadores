@@ -7,175 +7,170 @@ import ImageRadioGroup from './ImageRadioGroup';
 import '../assets/styles/norma36.css';
 import '../assets/styles/formulario.css';
 
+const opcionesDistManosEsp = [
+    {
+        value: "cerca",
+        label: "Cerca: Los brazos alineados verticalmente y con el torso erguido",
+        image: "/images/norma36/dist_manos_esp_1.png",
+        colorTheme: "green"
+    },
+    {
+        value: "moderado_1",
+        label: "Moderado: Los brazos se alejan del cuerpo.",
+        image: "/images/norma36/dist_manos_esp_2.png",
+        colorTheme: "orange"
+    },
+    {
+        value: "moderado_2",
+        label: "Moderado: Torso inclinado hacia adelante.",
+        image: "/images/norma36/dist_manos_esp_3.png",
+        colorTheme: "orange"
+    },
+    {
+        value: "lejos",
+        label: "Lejos: Los brazos se inclinan hacia fuera del cuerpo y el torso se inclina hacia adelante.",
+        image: "/images/norma36/dist_manos_esp_4.png",
+        colorTheme: "red"
+        }
+];
+
+const opcionesRegLevantamiento = [
+    {
+        value: "encima",
+        label: "Por encima de la rodilla y/o por debajo de la altura del codo.",
+        image: "/images/norma36/reg_levantamiento_1.png",
+        colorTheme: "green"
+    },
+    {
+        value: "debajo",
+        label: "Por debajo de la rodilla y/o por encima de la altura del codo.",
+        image: "/images/norma36/reg_levantamiento_2.png",
+        colorTheme: "orange"
+    },
+    {
+        value: "suelo",
+        label: "Nivel de suelo o inferior.",
+        image: "/images/norma36/reg_levantamiento_3.png",
+        colorTheme: "red"
+    },
+    {
+        value: "cabeza",
+        label: "A la altura de la cabeza o superior.",
+        image: "/images/norma36/reg_levantamiento_4.png",
+        colorTheme: "red"
+    }
+];
+
+const opcionesTorFlexTorso = [
+    {
+        value: "poca",
+        label: "Poca o ninguna torsión o flexión lateral del torso.",
+        image: "/images/norma36/tor_flex_torso_1.png",
+        colorTheme: "green"
+    },
+    {
+        value: "tor_o_flex",
+        label: "Torsión o flexión lateral del torso.",
+        image: "/images/norma36/tor_flex_torso_2.png",
+        colorTheme: "orange"
+    },
+    {
+        value: "tor_y_flex",
+        label: "Torsión y flexión lateral del torso.",
+        image: "/images/norma36/tor_flex_torso_3.png",
+        colorTheme: "red"
+    }
+];
+
+const opcionesRestPosturales = [
+    {
+        value: "sin",
+        label: "Sin restricciones posturales.",
+        colorTheme: "green"
+    },
+    {
+        value: "restringida",
+        label: "Postura restringida.",
+        colorTheme: "orange"
+    },
+    {
+        value: "severa",
+        label: "Postura severamente restringida.",
+        colorTheme: "red"
+    }
+];
+
+const opcionesAcompManoCarga = [
+    {
+        value: "bueno",
+        label: "Buen agarre.",
+        colorTheme: "green"
+    },
+    {
+        value: "regular",
+        label: "Agarre regular.",
+        colorTheme: "orange"
+    },
+    {
+        value: "mal",
+        label: "Mal agarre.",
+        colorTheme: "red"
+    }
+];
+
+const opcionesSupTrabajo = [
+    {
+        value: "seco_limpio",
+        label: "Piso seco, limpio y en buenas condiciones de mantenimiento.",
+        colorTheme: "green"
+    },
+    {
+        value: "seco_malo",
+        label: "Piso seco, pero en malas condiciones, desgastado o irregular.",
+        colorTheme: "orange"
+    },
+    {
+        value: "contaminado_inadecuado",
+        label: "Piso contaminado/húmedo o desnivelado, superficie inestable o calzado inadecuado.",
+        colorTheme: "red"
+    }
+];
+
 export function Norma36Form () {
-    const [distManosEsp, setDistManosEsp] = useState(""); 
+    const [formData, setFormData] = useState({
+        nombre_trabajador: "",
+        puesto_trabajador: "",
+        actividad_trabajador: "",
+        descripcion_actividad: "",
+        peso_carga: "",
+        frecuencia_carga: "",
+        distancia_manos_espalda: "",
+        region_levantamiento: "",
+        torsion_flexion_torso: "",
+        restricciones_posturales: "",
+        acomplamiento_mano_carga: "",
+        superficie_trabajo: ""
+    });
 
-    // Defines las opciones con su imagen y texto
-    const opcionesDistManosEsp = [
-        {
-            value: "cerca",
-            label: "Cerca: Los brazos alineados verticalmente y con el torso erguido",
-            image: "/images/norma36/dist_manos_esp_1.png",
-            colorTheme: "green"
-        },
-        {
-            value: "moderado_1",
-            label: "Moderado: Los brazos se alejan del cuerpo.",
-            image: "/images/norma36/dist_manos_esp_2.png",
-            colorTheme: "orange"
-        },
-        {
-            value: "moderado_2",
-            label: "Moderado: Torso inclinado hacia adelante.",
-            image: "/images/norma36/dist_manos_esp_3.png",
-            colorTheme: "orange"
-        },
-        {
-            value: "lejos",
-            label: "Lejos: Los brazos se inclinan hacia fuera del cuerpo y el torso se inclina hacia adelante.",
-            image: "/images/norma36/dist_manos_esp_4.png",
-            colorTheme: "red"
-        }
-    ];
-
-    const handleChangeDistManosEsp = (e) => {
-        setDistManosEsp(e.target.value);
+    // 3. FUNCIÓN DE CAMBIO UNIVERSAL
+    // Esta única función maneja TODOS los inputs (texto, números, selects y radio buttons)
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState, // Mantiene los datos anteriores
+            [name]: value // Actualiza solo el campo que disparó el evento
+        }));
     };
 
-    const [ regLevantamiento, setRegLevantamiento] = useState(""); 
-
-    const opcionesRegLevantamiento = [
-        {
-            value: "encima",
-            label: "Por encima de la rodilla y/o por debajo de la altura del codo.",
-            image: "/images/norma36/reg_levantamiento_1.png",
-            colorTheme: "green"
-        },
-        {
-            value: "debajo",
-            label: "Por debajo de la rodilla y/o por encima de la altura del codo.",
-            image: "/images/norma36/reg_levantamiento_2.png",
-            colorTheme: "orange"
-        },
-        {
-            value: "suelo",
-            label: "Nivel de suelo o inferior.",
-            image: "/images/norma36/reg_levantamiento_3.png",
-            colorTheme: "red"
-        },
-        {
-            value: "cabeza",
-            label: "A la altura de la cabeza o superior.",
-            image: "/images/norma36/reg_levantamiento_4.png",
-            colorTheme: "red"
-        }
-    ];
-
-    const handleChangeRegLevantamiento = (e) => {
-        setRegLevantamiento(e.target.value);
-    };
-
-    const [ torFlexTorso, setTorFlexTorso] = useState(""); 
-
-    const opcionesTorFlexTorso = [
-        {
-            value: "poca",
-            label: "Poca o ninguna torsión o flexión lateral del torso.",
-            image: "/images/norma36/tor_flex_torso_1.png",
-            colorTheme: "green"
-        },
-        {
-            value: "tor_o_flex",
-            label: "Torsión o flexión lateral del torso.",
-            image: "/images/norma36/tor_flex_torso_2.png",
-            colorTheme: "orange"
-        },
-        {
-            value: "tor_y_flex",
-            label: "Torsión y flexión lateral del torso.",
-            image: "/images/norma36/tor_flex_torso_3.png",
-            colorTheme: "red"
-        }
-    ];
-
-    const handleChangeTorFlexTorso = (e) => {
-        setTorFlexTorso(e.target.value);
-    };
-
-    const [ restPosturales, setRestPosturales] = useState(""); 
-
-    const opcionesRestPosturales = [
-        {
-            value: "sin",
-            label: "Sin restricciones posturales.",
-            colorTheme: "green"
-        },
-        {
-            value: "restringida",
-            label: "Postura restringida.",
-            colorTheme: "orange"
-        },
-        {
-            value: "severa",
-            label: "Postura severamente restringida.",
-            colorTheme: "red"
-        }
-    ];
-
-    const handleChangeRestPosturales = (e) => {
-        setRestPosturales(e.target.value);
-    };
-
-    const [ acompManoCarga, setAcompManoCarga] = useState(""); 
-
-    const opcionesAcompManoCarga = [
-        {
-            value: "bueno",
-            label: "Buen agarre.",
-            colorTheme: "green"
-        },
-        {
-            value: "regular",
-            label: "Agarre regular.",
-            colorTheme: "orange"
-        },
-        {
-            value: "mal",
-            label: "Mal agarre.",
-            colorTheme: "red"
-        }
-    ];
-
-    const handleChangeAcompManoCarga = (e) => {
-        setAcompManoCarga(e.target.value);
-    };
-
-    const [ supTrabajo, setSupTrabajo] = useState(""); 
-
-    const opcionesSupTrabajo = [
-        {
-            value: "seco_limpio",
-            label: "Piso seco, limpio y en buenas condiciones de mantenimiento.",
-            colorTheme: "green"
-        },
-        {
-            value: "seco_malo",
-            label: "Piso seco, pero en malas condiciones, desgastado o irregular.",
-            colorTheme: "orange"
-        },
-        {
-            value: "contaminado_inadecuado",
-            label: "Piso contaminado/húmedo o desnivelado, superficie inestable o calzado inadecuado.",
-            colorTheme: "red"
-        }
-    ];
-
-    const handleChangeSupTrabajo = (e) => {
-        setSupTrabajo(e.target.value);
+    // 4. FUNCIÓN PARA ENVIAR A SUPABASE
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("Datos listos para enviar a la base de datos:", formData);
+        // Aquí irá tu lógica de insert en Supabase
     };
 
     return(
-        <form className="form-container">
+        <form className="form-container" onSubmit={handleSubmit}>
         
             <h3>
                 <i className="material-symbols-outlined">
@@ -196,8 +191,8 @@ export function Norma36Form () {
                         type="text"
                         id="nombreTrabajador"
                         name='nombre_trabajador'
-                        // value={values.startDate}
-                        // onChange={handleChange}
+                        value={formData.nombre_trabajador}
+                        onChange={handleInputChange}
                         placeholder="Ejemplo: Juan Rodriguez"
                         // error={errors.startDate}
                     />  
@@ -215,8 +210,8 @@ export function Norma36Form () {
                         type="text"
                         id="puestoTrabajador"
                         name='puesto_trabajador'
-                        // value={values.endDate}
-                        // onChange={handleChange}
+                        value={formData.puesto_trabajador}
+                        onChange={handleInputChange}
                         placeholder="Ejemplo: Almacenamiento"
                         // error={errors.endDate}
                     />
@@ -236,8 +231,8 @@ export function Norma36Form () {
                         // type="text"
                         id="actividadTrabajador"
                         name='actividad_trabajador'
-                        // value={values.startDate}
-                        // onChange={handleChange}
+                        value={formData.actividad_trabajador}
+                        onChange={handleInputChange}
                         placeholder="Ejemplo: "
                         // error={errors.startDate}
                     >
@@ -265,9 +260,9 @@ export function Norma36Form () {
                     <Input
                         type="text"
                         id="descripcionActividad"
-                        name='descrpcion_actividad'
-                        // value={values.endDate}
-                        // onChange={handleChange}
+                        name='descripcion_actividad'
+                        value={formData.descripcion_actividad}
+                        onChange={handleInputChange}
                         placeholder="Ejemplo: "
                         // error={errors.endDate}
                     />
@@ -287,8 +282,8 @@ export function Norma36Form () {
                         type="number"
                         id="pesoCarga"
                         name='peso_carga'
-                        // value={values.startDate}
-                        // onChange={handleChange}
+                        value={formData.peso_carga}
+                        onChange={handleInputChange}
                         placeholder="Ejemplo: 12"
                         // error={errors.startDate}
                     />
@@ -300,14 +295,14 @@ export function Norma36Form () {
                         htmlFor="frecuenciaCarga"
                         title="Ingrese la cantidad de veces que realiza la carga al día."
                     > 
-                        Frecuencia de la carga:
+                        Frecuencia de la carga al día:
                     </Label>
                     <Input
                         type="number"
                         id="frecuenciaCarga"
                         name='frecuencia_carga'
-                        // value={values.endDate}
-                        // onChange={handleChange}
+                        value={formData.frecuencia_carga}
+                        onChange={handleInputChange}
                         placeholder="Ejemplo: 5"
                         // error={errors.endDate}
                     />
@@ -321,15 +316,15 @@ export function Norma36Form () {
                         htmlFor="distanciaManosEspalda"
                         title="Seleccione la distancia entre las manos y la parte inferior de la espalda"
                     > 
-                    ¿   Cuál es la distancia horizontal entre las manos y la parte inferior de la espalda?
+                        ¿Cuál es la distancia horizontal entre las manos y la parte inferior de la espalda?
                     </Label>
                 
                 {/* Así usas tu nuevo componente */}
                     <ImageRadioGroup 
-                        name="distanciaManosEspalda"
+                        name="distancia_manos_espalda"
                         options={opcionesDistManosEsp}
-                        selectedValue={distManosEsp}
-                        onChange={handleChangeDistManosEsp}
+                        selectedValue={formData.distancia_manos_espalda}
+                        onChange={handleInputChange}
                 /   >
                 </div>
 
@@ -343,10 +338,10 @@ export function Norma36Form () {
                 
                 {/* Así usas tu nuevo componente */}
                     <ImageRadioGroup 
-                        name="regionLevantamiento"
+                        name="region_levantamiento"
                         options={opcionesRegLevantamiento}
-                        selectedValue={regLevantamiento}
-                        onChange={handleChangeRegLevantamiento}
+                        selectedValue={formData.region_levantamiento}
+                        onChange={handleInputChange}
                     />
                 </div>
             </div>
@@ -361,10 +356,10 @@ export function Norma36Form () {
                     </Label>
 
                     <ImageRadioGroup 
-                        name="torsionFlexionTorso"
+                        name="torsion_flexion_torso"
                         options={opcionesTorFlexTorso}
-                        selectedValue={torFlexTorso}
-                        onChange={handleChangeTorFlexTorso}
+                        selectedValue={formData.torsion_flexion_torso}
+                        onChange={handleInputChange}
                     />
                     {/* {errors.startDate && <p className="message-error">{errors.startDate}</p>} */}
                 </div>
@@ -376,25 +371,12 @@ export function Norma36Form () {
                     > 
                         ¿Hay restricciones posturales?:
                     </Label>
-                    {/* <Select
-                        //type="number"
-                        id="restriccionesPosturales"
-                        name='restricciones_posturales'
-                        // value={values.endDate}
-                        // onChange={handleChange}
-                        placeholder="Ejemplo: "
-                        // error={errors.endDate}
-                    >
-                        <option>Sin restricciones posturales.</option>
-                        <option>Postura restringida .</option>
-                        <option>Postura severamente restringida .</option>
-                    </Select> */}
-            
+
                     <ImageRadioGroup 
-                        name="restriccionesPosturales"
+                        name="restricciones_posturales"
                         options={opcionesRestPosturales}
-                        selectedValue={restPosturales}
-                        onChange={handleChangeRestPosturales}
+                        selectedValue={formData.restricciones_posturales}
+                        onChange={handleInputChange}
                     />
                     {/* {errors.endDate && <p className="message-error">{errors.endDate}</p>} */}
                 </div>
@@ -408,24 +390,12 @@ export function Norma36Form () {
                     > 
                         ¿Cómo es el acoplamiento mano-carga?
                     </Label>
-                    {/* <Select
-                        // type="number"
-                        id="acomplamientoManoCarga"
-                        name='acomplamiento_mano_carga'
-                        // value={values.startDate}
-                        // onChange={handleChange}
-                        placeholder="Ejemplo: "
-                        // error={errors.startDate}
-                    >
-                        <option>Buen agarre. </option>
-                        <option>Agarre regular. </option>
-                        <option>mal agarre.</option>
-                    </Select> */}
+
                     <ImageRadioGroup 
-                        name="acomplamientoManoCarga"
+                        name="acomplamiento_mano_carga"
                         options={opcionesAcompManoCarga}
-                        selectedValue={acompManoCarga}
-                        onChange={handleChangeAcompManoCarga}
+                        selectedValue={formData.acomplamiento_mano_carga}
+                        onChange={handleInputChange}
                     />
                     {/* {errors.startDate && <p className="message-error">{errors.startDate}</p>} */}
                 </div>
@@ -437,24 +407,12 @@ export function Norma36Form () {
                     > 
                         ¿Cómo es la superficie de trabajo?:
                     </Label>
-                    {/* <Select
-                        //type="number"
-                        id="superficieTrabajo"
-                        name='superficie_trabajo'
-                        // value={values.endDate}
-                        // onChange={handleChange}
-                        placeholder="Ejemplo: "
-                        // error={errors.endDate}
-                    >
-                        <option>Piso seco, limpio y en buenas condiciones de mantenimiento.</option>
-                        <option>Piso seco, pero en malas condiciones, desgastado o irregular.</option>
-                        <option>Piso contaminado/húmedo o desnivelado, superficie inestable o calzado inadecuado.</option>
-                    </Select> */}
+
                     <ImageRadioGroup 
-                        name="superficieTrabajo"
+                        name="superficie_trabajo"
                         options={opcionesSupTrabajo}
-                        selectedValue={supTrabajo}
-                        onChange={handleChangeSupTrabajo}
+                        selectedValue={formData.superficie_trabajo}
+                        onChange={handleInputChange}
                     />
                     {/* {errors.endDate && <p className="message-error">{errors.endDate}</p>} */}
                 </div>
