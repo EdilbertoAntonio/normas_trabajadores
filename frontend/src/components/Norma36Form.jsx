@@ -4,6 +4,7 @@ import Label from './Label';
 import Input from './Input';
 import Select from "./Select";
 import ImageRadioGroup from './ImageRadioGroup';
+import { supabase } from '../services/supabaseClient';
 import '../assets/styles/norma36.css';
 import '../assets/styles/formulario.css';
 
@@ -137,7 +138,10 @@ const opcionesSupTrabajo = [
 ];
 
 export function Norma36Form () {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [formData, setFormData] = useState({
+        nombre_empresa: "",
         nombre_trabajador: "",
         puesto_trabajador: "",
         actividad_trabajador: "",
@@ -163,10 +167,95 @@ export function Norma36Form () {
     };
 
     // 4. FUNCIÓN PARA ENVIAR A SUPABASE
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Datos listos para enviar a la base de datos:", formData);
-        // Aquí irá tu lógica de insert en Supabase
+
+        // VALIDACIÓN 1: Comprobar que no haya campos vacíos
+        // Object.values extrae todos los valores del diccionario formData
+        // .some() verifica si al menos uno cumple la condición (estar vacío)
+        const camposVacios = Object.values(formData).some(value => String(value).trim() === "");
+        
+        if (camposVacios) {
+            alert("Por favor, llena todos los campos del formulario antes de continuar.");
+            return; // El 'return' detiene la ejecución aquí mismo, evitando que se envíe
+        }
+
+        // VALIDACIÓN 2: Convertir a números para validar peso y frecuencia
+        const peso = parseFloat(formData.peso_carga);
+        const frecuencia = parseFloat(formData.frecuencia_carga);
+
+        if (isNaN(peso) || peso <= 0) {
+            alert("El peso de la carga debe ser un número mayor a 0.");
+            return; 
+        }
+
+        if (isNaN(frecuencia) || frecuencia <= 0) {
+            alert("La frecuencia de la carga debe ser un número mayor a 0.");
+            return;
+        }
+
+        // VALIDACIÓN 3: Confirmación final (Retorna true si da 'Aceptar' y false si da 'Cancelar')
+        const confirmarEnvio = window.confirm("¿Estás seguro de que deseas guardar estas respuestas?");
+        
+        if (confirmarEnvio) {
+            setIsSubmitting(true);
+            // Si el usuario acepta, ahora sí procedemos a enviar
+            try {
+                // 1. Obtenemos al usuario que tiene la sesión iniciada actualmente
+                const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+                if (authError || !user) {
+                    alert("Error de autenticación: No se pudo identificar al usuario.");
+                    setIsSubmitting(false);
+                    return;
+                }
+
+                // 2. Creamos un nuevo objeto uniendo el formulario y los datos del auditor
+                const datosFinales = {
+                    ...formData,
+                    auditor_email: user.email, // Inyectamos el correo del auditor
+                    // Supabase se encargará de generar el "id" (folio) y el "created_at" (fecha y hora) automáticamente
+                };
+                
+                console.log("Enviando a base de datos...", datosFinales);
+                
+                // 3. Inserción real en Supabase (Descomenta esto cuando tu tabla esté lista)
+                
+                const { data, error } = await supabase
+                    .from('norma36')
+                    .insert([datosFinales])
+                    .select(); // El .select() hace que Supabase te devuelva el registro recién creado, incluyendo su nuevo ID
+
+                if (error) throw error;
+                console.log("Registro guardado con folio:", data[0].id);
+                
+                
+                alert("¡Respuestas guardadas exitosamente!");
+                
+                // 4. Limpiamos el formulario para la siguiente captura
+                setFormData({
+                    nombre_empresa: "",
+                    nombre_trabajador: "",
+                    puesto_trabajador: "",
+                    actividad_trabajador: "",
+                    descripcion_actividad: "",
+                    peso_carga: "",
+                    frecuencia_carga: "",
+                    distancia_manos_espalda: "",
+                    region_levantamiento: "",
+                    torsion_flexion_torso: "",
+                    restricciones_posturales: "",
+                    acomplamiento_mano_carga: "",
+                    superficie_trabajo: ""
+                });
+            } catch (error) {
+                console.error("Error al guardar:", error);
+                alert("Hubo un error al comunicarse con la base de datos.");
+            } finally {
+                // 3. Pase lo que pase (éxito o error), desbloqueamos el botón al final
+                setIsSubmitting(false); 
+            }
+        }
     };
 
     return(
@@ -176,10 +265,29 @@ export function Norma36Form () {
                 <i className="material-symbols-outlined">
                     fitness_center
                 </i>
-                Preguntas para levantamiento y descenso
+                Preguntas para levantamiento y descenso - NOM 036
             </h3>
 
             <div className="form-range-container">
+                <div className="form-input">
+                    <Label 
+                        htmlFor="nombreEmpresa"
+                        title="Escriba el nombre de la empresa que va auditar"
+                    > 
+                        Nombre de la empresa:
+                    </Label>
+                    <Input
+                        type="text"
+                        id="nombreEmpresa"
+                        name='nombre_empresa'
+                        value={formData.nombre_empresa}
+                        onChange={handleInputChange}
+                        placeholder="Ejemplo: Cristaleria Luz de AC"
+                        // error={errors.startDate}
+                    />  
+                    {/* {errors.startDate && <p className="message-error">{errors.startDate}</p>} */}
+                </div>
+
                 <div className="form-input">
                     <Label 
                         htmlFor="nombreTrabajador"
@@ -276,7 +384,7 @@ export function Norma36Form () {
                         htmlFor="pesoCarga"
                         title="Ingrese el número del peso de la carga en kilos"
                     > 
-                        Peso de la carga:
+                        Peso de la carga en kilos:
                     </Label>
                     <Input
                         type="number"
@@ -299,6 +407,8 @@ export function Norma36Form () {
                     </Label>
                     <Input
                         type="number"
+                        //type='tel'
+                        //inputMode='numeric'
                         id="frecuenciaCarga"
                         name='frecuencia_carga'
                         value={formData.frecuencia_carga}
@@ -418,9 +528,11 @@ export function Norma36Form () {
                 </div>
             </div>
 
-            <Button type="submit"> 
-                <span className="material-symbols-outlined">save</span>
-                    Guardar respuestas
+            <Button type="submit" disabled={isSubmitting}> 
+                <span className="material-symbols-outlined">
+                    {isSubmitting ? 'sync' : 'save'}
+                </span>
+                {isSubmitting ? 'Guardando...' : 'Guardar respuestas'}
             </Button>
 
         </form>
