@@ -156,31 +156,48 @@ export function Norma36Form () {
         superficie_trabajo: ""
     });
 
-    // 3. FUNCIÓN DE CAMBIO UNIVERSAL
-    // Esta única función maneja TODOS los inputs (texto, números, selects y radio buttons)
+    const [errors, setErrors] = useState({});
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
-            ...prevState, // Mantiene los datos anteriores
-            [name]: value // Actualiza solo el campo que disparó el evento
+            ...prevState, 
+            [name]: value 
         }));
+
+        if (errors[name]) {
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                [name]: false
+            }));
+        }
     };
 
-    // 4. FUNCIÓN PARA ENVIAR A SUPABASE
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // VALIDACIÓN 1: Comprobar que no haya campos vacíos
-        // Object.values extrae todos los valores del diccionario formData
-        // .some() verifica si al menos uno cumple la condición (estar vacío)
+        if (isSubmitting) return;
+
+        const nuevosErrores = {};
+        Object.keys(formData).forEach(key => {
+            if (String(formData[key]).trim() === "") {
+                nuevosErrores[key] = true; 
+            }
+        });
+
+        if (Object.keys(nuevosErrores).length > 0) {
+            setErrors(nuevosErrores); 
+            alert("Por favor, completa todos los campos antes de continuar.");
+            return;
+        }
+
         const camposVacios = Object.values(formData).some(value => String(value).trim() === "");
         
         if (camposVacios) {
             alert("Por favor, llena todos los campos del formulario antes de continuar.");
-            return; // El 'return' detiene la ejecución aquí mismo, evitando que se envíe
+            return; 
         }
 
-        // VALIDACIÓN 2: Convertir a números para validar peso y frecuencia
         const peso = parseFloat(formData.peso_carga);
         const frecuencia = parseFloat(formData.frecuencia_carga);
 
@@ -194,14 +211,12 @@ export function Norma36Form () {
             return;
         }
 
-        // VALIDACIÓN 3: Confirmación final (Retorna true si da 'Aceptar' y false si da 'Cancelar')
         const confirmarEnvio = window.confirm("¿Estás seguro de que deseas guardar estas respuestas?");
         
         if (confirmarEnvio) {
+
             setIsSubmitting(true);
-            // Si el usuario acepta, ahora sí procedemos a enviar
             try {
-                // 1. Obtenemos al usuario que tiene la sesión iniciada actualmente
                 const { data: { user }, error: authError } = await supabase.auth.getUser();
 
                 if (authError || !user) {
@@ -210,29 +225,22 @@ export function Norma36Form () {
                     return;
                 }
 
-                // 2. Creamos un nuevo objeto uniendo el formulario y los datos del auditor
                 const datosFinales = {
                     ...formData,
-                    auditor_email: user.email, // Inyectamos el correo del auditor
-                    // Supabase se encargará de generar el "id" (folio) y el "created_at" (fecha y hora) automáticamente
+                    auditor_email: user.email, 
                 };
-                
-                console.log("Enviando a base de datos...", datosFinales);
-                
-                // 3. Inserción real en Supabase (Descomenta esto cuando tu tabla esté lista)
                 
                 const { data, error } = await supabase
                     .from('norma36')
                     .insert([datosFinales])
-                    .select(); // El .select() hace que Supabase te devuelva el registro recién creado, incluyendo su nuevo ID
+                    .select(); 
 
                 if (error) throw error;
+
                 console.log("Registro guardado con folio:", data[0].id);
-                
                 
                 alert("¡Respuestas guardadas exitosamente!");
                 
-                // 4. Limpiamos el formulario para la siguiente captura
                 setFormData({
                     nombre_empresa: "",
                     nombre_trabajador: "",
@@ -250,9 +258,8 @@ export function Norma36Form () {
                 });
             } catch (error) {
                 console.error("Error al guardar:", error);
-                alert("Hubo un error al comunicarse con la base de datos.");
+                alert("Hubo un error al comunicarse con la base de datos. Favor de volver a guardar nuevamente el formulario.");
             } finally {
-                // 3. Pase lo que pase (éxito o error), desbloqueamos el botón al final
                 setIsSubmitting(false); 
             }
         }
@@ -265,7 +272,7 @@ export function Norma36Form () {
                 <i className="material-symbols-outlined">
                     fitness_center
                 </i>
-                Preguntas para levantamiento y descenso - NOM 036
+                Formulario para la Norma NOM-036-1-STPS-2018
             </h3>
 
             <div className="form-range-container">
@@ -283,9 +290,9 @@ export function Norma36Form () {
                         value={formData.nombre_empresa}
                         onChange={handleInputChange}
                         placeholder="Ejemplo: Cristaleria Luz de AC"
-                        // error={errors.startDate}
+                        error={errors.nombre_empresa}
                     />  
-                    {/* {errors.startDate && <p className="message-error">{errors.startDate}</p>} */}
+
                 </div>
 
                 <div className="form-input">
@@ -302,9 +309,8 @@ export function Norma36Form () {
                         value={formData.nombre_trabajador}
                         onChange={handleInputChange}
                         placeholder="Ejemplo: Juan Rodriguez"
-                        // error={errors.startDate}
+                        error={errors.nombre_trabajador}
                     />  
-                    {/* {errors.startDate && <p className="message-error">{errors.startDate}</p>} */}
                 </div>
 
                 <div className="form-input">
@@ -321,9 +327,8 @@ export function Norma36Form () {
                         value={formData.puesto_trabajador}
                         onChange={handleInputChange}
                         placeholder="Ejemplo: Almacenamiento"
-                        // error={errors.endDate}
+                        error={errors.puesto_trabajador}
                     />
-                    {/* {errors.endDate && <p className="message-error">{errors.endDate}</p>} */}
                 </div>
             </div>
 
@@ -341,8 +346,8 @@ export function Norma36Form () {
                         name='actividad_trabajador'
                         value={formData.actividad_trabajador}
                         onChange={handleInputChange}
-                        placeholder="Ejemplo: "
-                        // error={errors.startDate}
+                        placeholder="Ejemplo: Levantamiento  "
+                        error={errors.actividad_trabajador}
                     >
                         <option>Levantamiento</option>
                         <option>Descenso</option>
@@ -355,7 +360,6 @@ export function Norma36Form () {
                         <option>Empujar con equipo auxiliar (mediano)</option>
                         <option>Empujar con equipo auxiliar (grande)</option>
                     </Select>
-                    {/* {errors.startDate && <p className="message-error">{errors.startDate}</p>} */}
                 </div>
 
                 <div className="form-input">
@@ -372,9 +376,8 @@ export function Norma36Form () {
                         value={formData.descripcion_actividad}
                         onChange={handleInputChange}
                         placeholder="Ejemplo: "
-                        // error={errors.endDate}
+                        error={errors.descripcion_actividad}
                     />
-                    {/* {errors.endDate && <p className="message-error">{errors.endDate}</p>} */}
                 </div>
             </div>
 
@@ -393,9 +396,10 @@ export function Norma36Form () {
                         value={formData.peso_carga}
                         onChange={handleInputChange}
                         placeholder="Ejemplo: 12"
-                        // error={errors.startDate}
+                        min = '0'
+                        step ='1'
+                        error={errors.peso_carga}
                     />
-                    {/* {errors.startDate && <p className="message-error">{errors.startDate}</p>} */}
                 </div>
 
                 <div className="form-input">
@@ -407,16 +411,15 @@ export function Norma36Form () {
                     </Label>
                     <Input
                         type="number"
-                        //type='tel'
-                        //inputMode='numeric'
                         id="frecuenciaCarga"
                         name='frecuencia_carga'
                         value={formData.frecuencia_carga}
                         onChange={handleInputChange}
                         placeholder="Ejemplo: 5"
-                        // error={errors.endDate}
+                        min = '0'
+                        step ='1'
+                        error={errors.frecuencia_carga}
                     />
-                    {/* {errors.endDate && <p className="message-error">{errors.endDate}</p>} */}
                 </div>
             </div>
 
@@ -428,8 +431,6 @@ export function Norma36Form () {
                     > 
                         ¿Cuál es la distancia horizontal entre las manos y la parte inferior de la espalda?
                     </Label>
-                
-                {/* Así usas tu nuevo componente */}
                     <ImageRadioGroup 
                         name="distancia_manos_espalda"
                         options={opcionesDistManosEsp}
@@ -445,8 +446,6 @@ export function Norma36Form () {
                     > 
                         ¿Cuál es la región de levantamiento vertical?:
                     </Label>
-                
-                {/* Así usas tu nuevo componente */}
                     <ImageRadioGroup 
                         name="region_levantamiento"
                         options={opcionesRegLevantamiento}
@@ -464,14 +463,12 @@ export function Norma36Form () {
                     > 
                         ¿Cómo es la torsión y flexión lateral del torso?
                     </Label>
-
                     <ImageRadioGroup 
                         name="torsion_flexion_torso"
                         options={opcionesTorFlexTorso}
                         selectedValue={formData.torsion_flexion_torso}
                         onChange={handleInputChange}
                     />
-                    {/* {errors.startDate && <p className="message-error">{errors.startDate}</p>} */}
                 </div>
 
                 <div className="form-input">
@@ -481,14 +478,12 @@ export function Norma36Form () {
                     > 
                         ¿Hay restricciones posturales?:
                     </Label>
-
                     <ImageRadioGroup 
                         name="restricciones_posturales"
                         options={opcionesRestPosturales}
                         selectedValue={formData.restricciones_posturales}
                         onChange={handleInputChange}
                     />
-                    {/* {errors.endDate && <p className="message-error">{errors.endDate}</p>} */}
                 </div>
             </div>
 
@@ -500,14 +495,12 @@ export function Norma36Form () {
                     > 
                         ¿Cómo es el acoplamiento mano-carga?
                     </Label>
-
                     <ImageRadioGroup 
                         name="acomplamiento_mano_carga"
                         options={opcionesAcompManoCarga}
                         selectedValue={formData.acomplamiento_mano_carga}
                         onChange={handleInputChange}
                     />
-                    {/* {errors.startDate && <p className="message-error">{errors.startDate}</p>} */}
                 </div>
 
                 <div className="form-input">
@@ -524,7 +517,6 @@ export function Norma36Form () {
                         selectedValue={formData.superficie_trabajo}
                         onChange={handleInputChange}
                     />
-                    {/* {errors.endDate && <p className="message-error">{errors.endDate}</p>} */}
                 </div>
             </div>
 

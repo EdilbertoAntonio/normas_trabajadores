@@ -3,8 +3,8 @@
 .input-container {
     position: relative; 
     /* margin-bottom: var(--spacing-small); */
-    width: 100%; /* Aseguramos que el contenedor ocupe todo el ancho para el posicionamiento absoluto */
-    display: flex; /* Ayuda con la alineación vertical */
+    width: 100%; 
+    display: flex;
     align-items: center;
 }
 .input-container.no-margin {
@@ -27,18 +27,16 @@
     outline: none;
     box-shadow: 0 0 0 2px var(--secondary-error-color);
 }
-
 .input-icon-right {
     position: absolute;
-    right: 15px; /* Posición horizontal desde el borde derecho */
+    right: 15px; 
     top: 50%;
-    transform: translateY(-50%); /* Centrado vertical perfecto */
+    transform: translateY(-50%); 
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer; /* Indicar interactividad */
-    /*color: #757575; /* Un gris estándar para iconos de formularios */
-    color: var(--secondary-color-dark-gray); /* Si tienes esta variable definida en variables.css, es mejor usarla */
-    user-select: none; /* Prevenir la selección de texto al hacer click rápido */
-    z-index: 2; /* Asegurar que esté por encima del input */
+    cursor: pointer; 
+    color: var(--secondary-color-dark-gray); 
+    user-select: none;
+    z-index: 2; 
 }

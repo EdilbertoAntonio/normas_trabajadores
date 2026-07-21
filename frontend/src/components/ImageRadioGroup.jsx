@@ -1,4 +1,3 @@
-// src/components/ImageRadioGroup.jsx
 import React from 'react';
 import '../assets/styles/imageRadioGroup.css';
 
@@ -11,7 +10,6 @@ const ImageRadioGroup = ({ options, name, selectedValue, onChange, error }) => {
                 return (
                     <label 
                         key={option.value} 
-                        /* Aplicamos dinámicamente la clase del color (ej. theme-green) */
                         className={`image-radio-card ${isSelected ? 'selected' : ''} theme-${option.colorTheme} ${error ? 'error' : ''}`}
                     >
                         <input
@@ -24,7 +22,6 @@ const ImageRadioGroup = ({ options, name, selectedValue, onChange, error }) => {
                         />
                         
                         <div className="image-radio-content">
-                            {/* Nuestro nuevo círculo seleccionador */}
                             <div className="custom-radio-circle"></div>
                             
                             {option.image && (
