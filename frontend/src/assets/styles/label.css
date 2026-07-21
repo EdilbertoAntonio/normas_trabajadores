@@ -1,0 +1,13 @@
+@import './variables.css';
+
+.custom-label {
+    display: flex; 
+    margin-bottom: var(--spacing-medium); 
+    margin-left: var(--spacing-medium); 
+    font-size: var(--font-size-medium); 
+    color: var(--primary-color-black);
+    text-align: left; 
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}

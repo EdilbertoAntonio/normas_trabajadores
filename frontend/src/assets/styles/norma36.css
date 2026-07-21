@@ -1,0 +1,112 @@
+@import './variables.css';
+
+/* .custom-divider {
+    border: none;        
+    height: 1px;           
+    background-color: var(--primary-color-black); 
+    margin: 2px;      
+}
+.carga-range-container {
+    display: flex;
+    gap: 25px; 
+    align-items: flex-start;
+    margin-bottom: 1px; 
+    width: 100%;
+}
+.carga-range-container .carga-input {
+    flex: 1; 
+    min-height: 1px; 
+    min-width: 0;   
+}
+.carga-input {
+    display: flex;
+    flex-direction: column;
+}
+.carga-container {
+    background-color: var(--primary-color-white);
+    padding: 10px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); 
+    width: 90%; 
+    max-width: 2000px;  
+    margin: 20px auto; 
+    text-align: left;
+    overflow-x: auto;  
+    overflow-y: auto; 
+    height: calc(100vh - 135px);
+}
+.carga-container input,
+.carga-container select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    min-width: 0;
+}
+.carga-container input:focus{
+    border-color: var(--primary-color-blue); 
+    outline: none; 
+    box-shadow: 0 0 5px var(--secondary-color-gradient-blue); 
+}
+.carga-container button {
+    margin-top: 8px;
+}
+.carga-container h3 {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.carga-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    white-space: wrap;
+}
+.subtitle, .legend {
+    color: var(--secondary-color-dark-gray);
+}
+.subtitle {
+    margin: 0;
+}
+.legend {
+    margin: 5px;
+}
+.carga-wrapper {
+    width: 100%;
+    overflow-x: auto; 
+    padding: 0;
+}
+
+@media (max-width: 600px) {
+    .carga-container input,
+    .carga-container select {
+        padding: 8px 10px; 
+        font-size: 14px; 
+    } 
+    .carga-container {
+        width: 95%; 
+        margin: 10px auto; 
+        padding: 15px;
+    }
+    .carga-range-container {
+        flex-direction: column; 
+        gap: 10px; 
+    }
+    .carga-input {
+        width: 100%; 
+    }
+}
+@media (min-width: 601px) and (max-width: 768px) {
+    .carga-container {
+        width: 90%;
+        padding: 13px 20px;
+    }
+    .carga-range-container {
+        gap: 15px;
+    }   
+}  
+@media (min-width: 1024px) {
+    .carga-container {
+        padding: 15px 35px;
+        max-width: 2000px; 
+    }
+} */

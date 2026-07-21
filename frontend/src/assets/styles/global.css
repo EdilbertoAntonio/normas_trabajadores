@@ -1,0 +1,38 @@
+@import './variables.css';
+
+body {
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    background-color: var(--secondary-color-light-gray); 
+    color: var(--primary-color-black);
+}
+.page-layout {
+    display: flex;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+.page-content {
+    margin-left: 225px; 
+    width: calc(100% - 250px);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    transition: margin-left 0.3s ease;
+    overflow: hidden;
+}
+.material-symbols-outlined {
+    font-size: 20px; 
+    vertical-align: text-top; 
+}
+.message-error {
+    color: var(--error-color);
+    font-size: 16px;
+    white-space: nowrap;  
+    overflow: hidden;     
+    text-overflow: ellipsis;   
+    height: 20px;
+    display: block;
+}

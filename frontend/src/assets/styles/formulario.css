@@ -1,0 +1,112 @@
+@import './variables.css';
+
+.custom-divider {
+    border: none;        
+    height: 1px;           
+    background-color: var(--primary-color-black); 
+    margin: 2px;      
+}
+.form-range-container {
+    display: flex;
+    gap: 25px; 
+    align-items: flex-start;
+    margin-bottom: 1px; 
+    width: 100%;
+}
+.form-range-container .form-input {
+    flex: 1; 
+    min-height: 1px; 
+    min-width: 0;   
+}
+.form-input {
+    display: flex;
+    flex-direction: column;
+}
+.form-container {
+    background-color: var(--primary-color-white);
+    padding: 10px 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); 
+    width: 90%; 
+    max-width: 2000px;  
+    margin: 20px auto; 
+    text-align: left;
+    overflow-x: auto;  
+    overflow-y: auto; 
+    height: calc(100vh - 135px);
+}
+.form-container input,
+.form-container select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    min-width: 0;
+}
+.form-container input:focus{
+    border-color: var(--primary-color-blue); 
+    outline: none; 
+    box-shadow: 0 0 5px var(--secondary-color-gradient-blue); 
+}
+.form-container button {
+    margin-top: 8px;
+}
+.form-container h3 {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+.form-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    white-space: wrap;
+}
+.subtitle, .legend {
+    color: var(--secondary-color-dark-gray);
+}
+.subtitle {
+    margin: 0;
+}
+.legend {
+    margin: 5px;
+}
+.form-wrapper {
+    width: 100%;
+    overflow-x: auto; 
+    padding: 0;
+}
+
+@media (max-width: 600px) {
+    .form-container input,
+    .form-container select {
+        padding: 8px 10px; 
+        font-size: 14px; 
+    } 
+    .form-container {
+        width: 95%; 
+        margin: 10px auto; 
+        padding: 15px;
+    }
+    .form-range-container {
+        flex-direction: column; 
+        gap: 10px; 
+    }
+    .form-input {
+        width: 100%; 
+    }
+}
+@media (min-width: 601px) and (max-width: 768px) {
+    .form-container {
+        width: 90%;
+        padding: 13px 20px;
+    }
+    .form-range-container {
+        gap: 15px;
+    }   
+}  
+@media (min-width: 1024px) {
+    .form-container {
+        padding: 15px 35px;
+        max-width: 2000px; 
+    }
+}
