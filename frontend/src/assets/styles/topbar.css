@@ -66,3 +66,27 @@
 .logout-option:hover {
     background-color: #ffebee; /* Fondo rojizo claro */
 }
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.mobile-menu-btn {
+    display: none; /* Oculto en computadoras */
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color-blue);
+    padding: 4px;
+}
+
+/* Solo para pantallas menores a 768px (tablets y celulares) */
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: flex; /* Se muestra en celulares */
+    }
+    .topbar h2 {
+        font-size: 1.2rem; /* Achicamos un poco el título para celulares */
+    }
+}
