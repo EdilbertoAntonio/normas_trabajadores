@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SideBar } from './SideBar';
 import { TopBar } from './TopBar';
-import '../assets/styles/global.css'; // Mover estilos generales aquí
+import '../assets/styles/global.css'; 
 
 export const Layout = ({ children }) => {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
     return (
         <div className="page-layout">
-            <SideBar />
+            <SideBar
+                isMobileMenuOpen={isMobileMenuOpen} 
+                closeMobileMenu={() => setIsMobileMenuOpen(false)}
+            />
             <div className="page-content">
-                <TopBar />
-                {/* Aquí se inyectará el contenido específico de cada página */}
+                <TopBar toggleMobileMenu={toggleMobileMenu} />
+                
                 <main className="main-content">
                     {children}
                 </main>

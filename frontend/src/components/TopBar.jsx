@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabaseClient'; 
 import '../assets/styles/topbar.css';
 
-export const TopBar = () => {
+export const TopBar = ({ toggleMobileMenu }) => {
     
     const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
@@ -24,7 +24,12 @@ export const TopBar = () => {
 
     return (
         <header className="topbar">
-            <div><h2>Auditoría de normas</h2></div>
+            <div className="topbar-left">
+                <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
+                    <i className="material-symbols-outlined">menu</i>
+                </button>
+                <h2>Auditoría de normas</h2>
+            </div>
             
             <div className="user-profile-container">
                 <button className="profile-button" onClick={toggleMenu} aria-label="Menú de usuario">

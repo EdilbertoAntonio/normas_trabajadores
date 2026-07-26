@@ -78,3 +78,43 @@
     justify-content: space-between;
     height: 100vh;
 }
+.sidebar-overlay {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    /* Ocultamos la barra moviéndola fuera de la pantalla hacia la izquierda */
+    .sidebar {
+        transform: translateX(-100%);
+        width: 250px !important; /* Forzamos el ancho normal, ignoramos el "collapsed" */
+    }
+
+    /* Cuando tiene la clase mobile-open, la regresamos a la pantalla */
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    /* Ocultamos el botón de colapsar escritorio (menu_open) porque en móvil no se ocupa */
+    .sidebar .collapse-button {
+        display: none;
+    }
+
+    /* Estilos del fondo oscuro transparente */
+    .sidebar-overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999; /* Debe estar por debajo del sidebar (z-index 1000) */
+    }
+
+    /* Hacemos que el contenido ocupe el 100% de la pantalla */
+    .sidebar + .page-content,
+    .sidebar.collapsed + .page-content {
+        margin-left: 0;
+        width: 100%;
+    }
+}
