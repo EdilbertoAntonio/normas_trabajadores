@@ -88,3 +88,13 @@
     background-color: #f44336;
     box-shadow: inset 0 0 0 4px #ffebee;
 }
+
+.image-radio-card.selected.theme-purple {
+    border-color: #5D3FD3;
+    background-color: #E6E6FA; 
+}
+.image-radio-card.selected.theme-purple .custom-radio-circle {
+    border-color: #5D3FD3;
+    background-color: #5D3FD3;
+    box-shadow: inset 0 0 0 4px #E6E6FA;
+}

@@ -5,156 +5,39 @@ import Input from './Input';
 import Select from "./Select";
 import ImageRadioGroup from './ImageRadioGroup';
 import { supabase } from '../services/supabaseClient';
+import { LevantamientoDescenso } from "./PreguntasNorma36/LevantamientoDescenso";
+import { Transporte } from "./PreguntasNorma36/Transporte";
 import '../assets/styles/norma36.css';
 import '../assets/styles/formulario.css';
 
-const opcionesDistManosEsp = [
-    {
-        value: "cerca",
-        label: "Cerca: Los brazos alineados verticalmente y con el torso erguido",
-        image: "/images/norma36/dist_manos_esp_1.png",
-        colorTheme: "green"
-    },
-    {
-        value: "moderado_1",
-        label: "Moderado: Los brazos se alejan del cuerpo.",
-        image: "/images/norma36/dist_manos_esp_2.png",
-        colorTheme: "orange"
-    },
-    {
-        value: "moderado_2",
-        label: "Moderado: Torso inclinado hacia adelante.",
-        image: "/images/norma36/dist_manos_esp_3.png",
-        colorTheme: "orange"
-    },
-    {
-        value: "lejos",
-        label: "Lejos: Los brazos se inclinan hacia fuera del cuerpo y el torso se inclina hacia adelante.",
-        image: "/images/norma36/dist_manos_esp_4.png",
-        colorTheme: "red"
-        }
-];
+const ESTADO_INICIAL = {
+    nombre_empresa: "",
+    nombre_trabajador: "",
+    puesto_trabajador: "",
+    actividad_trabajador: "",
+    descripcion_actividad: "",
+    peso_carga: "",
+    
+    // Preguntas de Levantamiento / Descenso
+    frecuencia_carga: "",
+    distancia_manos_espalda: "",
+    region_levantamiento: "",
+    torsion_flexion_torso: "",
+    restricciones_posturales: "",
+    acomplamiento_mano_carga: "",
+    superficie_trabajo: "",
 
-const opcionesRegLevantamiento = [
-    {
-        value: "encima",
-        label: "Por encima de la rodilla y/o por debajo de la altura del codo.",
-        image: "/images/norma36/reg_levantamiento_1.png",
-        colorTheme: "green"
-    },
-    {
-        value: "debajo",
-        label: "Por debajo de la rodilla y/o por encima de la altura del codo.",
-        image: "/images/norma36/reg_levantamiento_2.png",
-        colorTheme: "orange"
-    },
-    {
-        value: "suelo",
-        label: "Nivel de suelo o inferior.",
-        image: "/images/norma36/reg_levantamiento_3.png",
-        colorTheme: "red"
-    },
-    {
-        value: "cabeza",
-        label: "A la altura de la cabeza o superior.",
-        image: "/images/norma36/reg_levantamiento_4.png",
-        colorTheme: "red"
-    }
-];
-
-const opcionesTorFlexTorso = [
-    {
-        value: "poca",
-        label: "Poca o ninguna torsión o flexión lateral del torso.",
-        image: "/images/norma36/tor_flex_torso_1.png",
-        colorTheme: "green"
-    },
-    {
-        value: "tor_o_flex",
-        label: "Torsión o flexión lateral del torso.",
-        image: "/images/norma36/tor_flex_torso_2.png",
-        colorTheme: "orange"
-    },
-    {
-        value: "tor_y_flex",
-        label: "Torsión y flexión lateral del torso.",
-        image: "/images/norma36/tor_flex_torso_3.png",
-        colorTheme: "red"
-    }
-];
-
-const opcionesRestPosturales = [
-    {
-        value: "sin",
-        label: "Sin restricciones posturales.",
-        colorTheme: "green"
-    },
-    {
-        value: "restringida",
-        label: "Postura restringida.",
-        colorTheme: "orange"
-    },
-    {
-        value: "severa",
-        label: "Postura severamente restringida.",
-        colorTheme: "red"
-    }
-];
-
-const opcionesAcompManoCarga = [
-    {
-        value: "bueno",
-        label: "Buen agarre.",
-        colorTheme: "green"
-    },
-    {
-        value: "regular",
-        label: "Agarre regular.",
-        colorTheme: "orange"
-    },
-    {
-        value: "mal",
-        label: "Mal agarre.",
-        colorTheme: "red"
-    }
-];
-
-const opcionesSupTrabajo = [
-    {
-        value: "seco_limpio",
-        label: "Piso seco, limpio y en buenas condiciones de mantenimiento.",
-        colorTheme: "green"
-    },
-    {
-        value: "seco_malo",
-        label: "Piso seco, pero en malas condiciones, desgastado o irregular.",
-        colorTheme: "orange"
-    },
-    {
-        value: "contaminado_inadecuado",
-        label: "Piso contaminado/húmedo o desnivelado, superficie inestable o calzado inadecuado.",
-        colorTheme: "red"
-    }
-];
+    // Transporte
+    carga_torso: "",
+    distancia_transporte: "",
+    obstaculos_ruta: ""
+    
+};
 
 export function Norma36Form () {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [formData, setFormData] = useState({
-        nombre_empresa: "",
-        nombre_trabajador: "",
-        puesto_trabajador: "",
-        actividad_trabajador: "",
-        descripcion_actividad: "",
-        peso_carga: "",
-        frecuencia_carga: "",
-        distancia_manos_espalda: "",
-        region_levantamiento: "",
-        torsion_flexion_torso: "",
-        restricciones_posturales: "",
-        acomplamiento_mano_carga: "",
-        superficie_trabajo: ""
-    });
+    const [formData, setFormData] = useState(ESTADO_INICIAL);
 
     const [errors, setErrors] = useState({});
 
@@ -178,9 +61,32 @@ export function Norma36Form () {
 
         if (isSubmitting) return;
 
+        // 7 preguntas que tendrán en comun
+        let camposRequeridos = [
+            'nombre_empresa', 'nombre_trabajador', 'puesto_trabajador', 
+            'actividad_trabajador', 'descripcion_actividad', 'peso_carga'
+        ];
+
+        // preguntas epecificas
+        if (formData.actividad_trabajador === "Levantamiento" || formData.actividad_trabajador === "Descenso") {
+            camposRequeridos.push(
+                'frecuenica_carga', 'distancia_manos_espalda', 'region_levantamiento', 'torsion_flexion_torso', 
+                'restricciones_posturales', 'acomplamiento_mano_carga', 'superficie_trabajo', 'factores_ambientales'
+            );
+        } else if (formData.actividad_trabajador === "Transporte") {
+            camposRequeridos.push(
+                'frecuenica_carga', 'distancia_manos_espalda', 'carga_torso', 'distancia_transporte', "obstaculos_ruta",
+                "restricciones_posturales", "acomplamiento_mano_carga", 'superficie_trabajo', 'factores_ambientales'
+            );
+            // Cuando tengas las de transporte, las agregas aquí:
+            // camposRequeridos.push('campo_transporte_1', 'campo_transporte_2');
+        }
+
+        // validamos solo campos requeridos
         const nuevosErrores = {};
-        Object.keys(formData).forEach(key => {
-            if (String(formData[key]).trim() === "") {
+        camposRequeridos.forEach(key => {
+            // Usamos formData[key] || "" para evitar errores si el campo aún no existe en el estado
+            if (String(formData[key] || "").trim() === "") {
                 nuevosErrores[key] = true; 
             }
         });
@@ -191,24 +97,18 @@ export function Norma36Form () {
             return;
         }
 
-        const camposVacios = Object.values(formData).some(value => String(value).trim() === "");
+        // const camposVacios = Object.values(formData).some(value => String(value).trim() === "");
         
-        if (camposVacios) {
-            alert("Por favor, llena todos los campos del formulario antes de continuar.");
-            return; 
-        }
+        // if (camposVacios) {
+        //     alert("Por favor, llena todos los campos del formulario antes de continuar.");
+        //     return; 
+        // }
 
         const peso = parseFloat(formData.peso_carga);
-        const frecuencia = parseFloat(formData.frecuencia_carga);
 
         if (isNaN(peso) || peso <= 0) {
             alert("El peso de la carga debe ser un número mayor a 0.");
             return; 
-        }
-
-        if (isNaN(frecuencia) || frecuencia <= 0) {
-            alert("La frecuencia de la carga debe ser un número mayor a 0.");
-            return;
         }
 
         const confirmarEnvio = window.confirm("¿Estás seguro de que deseas guardar estas respuestas?");
@@ -225,13 +125,22 @@ export function Norma36Form () {
                     return;
                 }
 
+                // const datosFinales = {
+                //     ...formData,
+                //     auditor_email: user.email, 
+                // };
+
+                const { nombre_empresa, ...restoDelFormulario } = formData;
+
                 const datosFinales = {
-                    ...formData,
                     auditor_email: user.email, 
+                    tipo_norma: "NOM-036", // Especificamos qué norma es
+                    nombre_empresa: nombre_empresa,
+                    datos_formulario: restoDelFormulario // El resto se va empaquetado al JSONB
                 };
                 
                 const { data, error } = await supabase
-                    .from('norma36')
+                    .from('auditorias')
                     .insert([datosFinales])
                     .select(); 
 
@@ -241,21 +150,8 @@ export function Norma36Form () {
                 
                 alert("¡Respuestas guardadas exitosamente!");
                 
-                setFormData({
-                    nombre_empresa: "",
-                    nombre_trabajador: "",
-                    puesto_trabajador: "",
-                    actividad_trabajador: "",
-                    descripcion_actividad: "",
-                    peso_carga: "",
-                    frecuencia_carga: "",
-                    distancia_manos_espalda: "",
-                    region_levantamiento: "",
-                    torsion_flexion_torso: "",
-                    restricciones_posturales: "",
-                    acomplamiento_mano_carga: "",
-                    superficie_trabajo: ""
-                });
+                setFormData(ESTADO_INICIAL);
+
             } catch (error) {
                 console.error("Error al guardar:", error);
                 alert("Hubo un error al comunicarse con la base de datos. Favor de volver a guardar nuevamente el formulario.");
@@ -379,9 +275,7 @@ export function Norma36Form () {
                         error={errors.descripcion_actividad}
                     />
                 </div>
-            </div>
 
-            <div className="form-range-container">
                 <div className="form-input">
                     <Label 
                         htmlFor="pesoCarga"
@@ -401,124 +295,23 @@ export function Norma36Form () {
                         error={errors.peso_carga}
                     />
                 </div>
-
-                <div className="form-input">
-                    <Label 
-                        htmlFor="frecuenciaCarga"
-                        title="Ingrese la cantidad de veces que realiza la carga al día."
-                    > 
-                        Frecuencia de la carga al día:
-                    </Label>
-                    <Input
-                        type="number"
-                        id="frecuenciaCarga"
-                        name='frecuencia_carga'
-                        value={formData.frecuencia_carga}
-                        onChange={handleInputChange}
-                        placeholder="Ejemplo: 5"
-                        min = '0'
-                        step ='1'
-                        error={errors.frecuencia_carga}
-                    />
-                </div>
             </div>
 
-            <div className="form-range-container">
-                <div className="form-input">
-                    <Label
-                        htmlFor="distanciaManosEspalda"
-                        title="Seleccione la distancia entre las manos y la parte inferior de la espalda"
-                    > 
-                        ¿Cuál es la distancia horizontal entre las manos y la parte inferior de la espalda?
-                    </Label>
-                    <ImageRadioGroup 
-                        name="distancia_manos_espalda"
-                        options={opcionesDistManosEsp}
-                        selectedValue={formData.distancia_manos_espalda}
-                        onChange={handleInputChange}
-                /   >
-                </div>
+            {(formData.actividad_trabajador === "Levantamiento" || formData.actividad_trabajador === "Descenso") && (
+                <LevantamientoDescenso 
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                    errors={errors}
+                />
+            )}
 
-                <div className="form-input">
-                    <Label
-                        htmlFor="regionLevantamiento"
-                        title="Seleccione la región del levantamiento vertical "
-                    > 
-                        ¿Cuál es la región de levantamiento vertical?:
-                    </Label>
-                    <ImageRadioGroup 
-                        name="region_levantamiento"
-                        options={opcionesRegLevantamiento}
-                        selectedValue={formData.region_levantamiento}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </div>
-
-            <div className="form-range-container">
-                <div className="form-input">
-                    <Label 
-                        htmlFor="torsionFlexionTorso"
-                        title="Seleccione la torsion y flexión lateral del torso"
-                    > 
-                        ¿Cómo es la torsión y flexión lateral del torso?
-                    </Label>
-                    <ImageRadioGroup 
-                        name="torsion_flexion_torso"
-                        options={opcionesTorFlexTorso}
-                        selectedValue={formData.torsion_flexion_torso}
-                        onChange={handleInputChange}
-                    />
-                </div>
-
-                <div className="form-input">
-                    <Label 
-                        htmlFor="restriccionesPosturales"
-                        title="Seleccione si hay restrcciones posturales"
-                    > 
-                        ¿Hay restricciones posturales?:
-                    </Label>
-                    <ImageRadioGroup 
-                        name="restricciones_posturales"
-                        options={opcionesRestPosturales}
-                        selectedValue={formData.restricciones_posturales}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </div>
-
-            <div className="form-range-container">
-                <div className="form-input">
-                    <Label 
-                        htmlFor="acomplamientoManoCarga"
-                        title="Seleccione el acomplamiento mano-carga"
-                    > 
-                        ¿Cómo es el acoplamiento mano-carga?
-                    </Label>
-                    <ImageRadioGroup 
-                        name="acomplamiento_mano_carga"
-                        options={opcionesAcompManoCarga}
-                        selectedValue={formData.acomplamiento_mano_carga}
-                        onChange={handleInputChange}
-                    />
-                </div>
-
-                <div className="form-input">
-                    <Label 
-                        htmlFor="superficieTrabajo"
-                        title="Seleccione el estado de la superficie de trabajo"
-                    > 
-                        ¿Cómo es la superficie de trabajo?:
-                    </Label>
-
-                    <ImageRadioGroup 
-                        name="superficie_trabajo"
-                        options={opcionesSupTrabajo}
-                        selectedValue={formData.superficie_trabajo}
-                        onChange={handleInputChange}
-                    />
-                </div>
-            </div>
+            {(formData.actividad_trabajador === "Transporte" ) && (
+                <Transporte 
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                    errors={errors}
+                />
+            )}
 
             <Button type="submit" disabled={isSubmitting}> 
                 <span className="material-symbols-outlined">
