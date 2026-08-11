@@ -169,6 +169,7 @@ export const LevantamientoDescenso = ({ formData, handleInputChange, errors }) =
                         placeholder="Ejemplo: Cada 30 minutos"
                         error={errors.frecuencia_carga}
                     >
+                        <option value="" disabled hidden>Selecciona una frecuencia...</option>
                         <option>Un transporte al dia</option>
                         <option>Cada 30 minutos</option>
                         <option>Cada 5 minutos</option>

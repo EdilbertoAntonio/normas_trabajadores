@@ -7,6 +7,7 @@ import ImageRadioGroup from './ImageRadioGroup';
 import { supabase } from '../services/supabaseClient';
 import { LevantamientoDescenso } from "./PreguntasNorma36/LevantamientoDescenso";
 import { Transporte } from "./PreguntasNorma36/Transporte";
+import { ManejoEquipo } from "./PreguntasNorma36/ManejoEquipo";
 import '../assets/styles/norma36.css';
 import '../assets/styles/formulario.css';
 
@@ -26,12 +27,16 @@ const ESTADO_INICIAL = {
     restricciones_posturales: "",
     acomplamiento_mano_carga: "",
     superficie_trabajo: "",
+    factores_ambientales:"",
 
     // Transporte
     carga_torso: "",
     distancia_transporte: "",
-    obstaculos_ruta: ""
-    
+    obstaculos_ruta: "",
+
+    // Manejo equipo
+    comunicacion_control: "",
+    personas_equipo: "", 
 };
 
 export function Norma36Form () {
@@ -70,16 +75,21 @@ export function Norma36Form () {
         // preguntas epecificas
         if (formData.actividad_trabajador === "Levantamiento" || formData.actividad_trabajador === "Descenso") {
             camposRequeridos.push(
-                'frecuenica_carga', 'distancia_manos_espalda', 'region_levantamiento', 'torsion_flexion_torso', 
+                'frecuencia_carga', 'distancia_manos_espalda', 'region_levantamiento', 'torsion_flexion_torso', 
                 'restricciones_posturales', 'acomplamiento_mano_carga', 'superficie_trabajo', 'factores_ambientales'
             );
-        } else if (formData.actividad_trabajador === "Transporte") {
+        } 
+        if (formData.actividad_trabajador === "Transporte") {
             camposRequeridos.push(
-                'frecuenica_carga', 'distancia_manos_espalda', 'carga_torso', 'distancia_transporte', "obstaculos_ruta",
+                'frecuencia_carga', 'distancia_manos_espalda', 'carga_torso', 'distancia_transporte', "obstaculos_ruta",
                 "restricciones_posturales", "acomplamiento_mano_carga", 'superficie_trabajo', 'factores_ambientales'
             );
-            // Cuando tengas las de transporte, las agregas aquí:
-            // camposRequeridos.push('campo_transporte_1', 'campo_transporte_2');
+        } 
+        if (formData.actividad_trabajador === "Manejo en equipo") {
+            camposRequeridos.push(
+                'personas_equipo','distancia_manos_espalda', 'region_levantamiento', 'torsion_flexion_torso', 'restricciones_posturales',
+                'acomplamiento_mano_carga', 'superficie_trabajo', 'factores_ambientales', 'comunicacion_control'
+            );
         }
 
         // validamos solo campos requeridos
@@ -132,11 +142,15 @@ export function Norma36Form () {
 
                 const { nombre_empresa, ...restoDelFormulario } = formData;
 
+                const datosLimpios = Object.fromEntries(
+                    Object.entries(restoDelFormulario).filter(([key, value]) => value !== "")
+                );
+
                 const datosFinales = {
                     auditor_email: user.email, 
                     tipo_norma: "NOM-036", // Especificamos qué norma es
                     nombre_empresa: nombre_empresa,
-                    datos_formulario: restoDelFormulario // El resto se va empaquetado al JSONB
+                    datos_formulario: datosLimpios // El resto se va empaquetado al JSONB
                 };
                 
                 const { data, error } = await supabase
@@ -248,7 +262,7 @@ export function Norma36Form () {
                         <option>Levantamiento</option>
                         <option>Descenso</option>
                         <option>Transporte</option>
-                        <option>Carga en equipo</option>
+                        <option>Manejo en equipo</option>
                         <option>Rodar</option>
                         <option>Arrastrar</option>
                         <option>Girar</option>
@@ -307,6 +321,14 @@ export function Norma36Form () {
 
             {(formData.actividad_trabajador === "Transporte" ) && (
                 <Transporte 
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                    errors={errors}
+                />
+            )}
+
+            {(formData.actividad_trabajador === "Manejo en equipo" ) && (
+                <ManejoEquipo
                     formData={formData}
                     handleInputChange={handleInputChange}
                     errors={errors}

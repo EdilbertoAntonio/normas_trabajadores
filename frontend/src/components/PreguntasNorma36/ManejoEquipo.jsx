@@ -5,54 +5,63 @@ import ImageRadioGroup from '../ImageRadioGroup';
 const opcionesDistManosEsp = [
     {
         value: "cerca",
-        label: "Cerca: Los brazos alineados verticalmente y con el torso erguido",
-        image: "/images/norma36/dist_manos_esp_1.png",
+        label: "Cerca: Brazos alineados verticalmente y torso erguido",
+        image: "/images/norma36/dist_manos_esp_eq_1.png",
         colorTheme: "green"
     },
     {
-        value: "moderado_1",
-        label: "Moderado: Los brazos se alejan del cuerpo.",
-        image: "/images/norma36/dist_manos_esp_2.png",
-        colorTheme: "orange"
-    },
-    {
-        value: "moderado_2",
-        label: "Moderado: Torso inclinado hacia adelante.",
-        image: "/images/norma36/dist_manos_esp_3.png",
+        value: "moderado",
+        label: "Moderado: Torso flexionado hacia adelante o brazos inclinados alejados del cuerpo.",
+        image: "/images/norma36/dist_manos_esp_eq_2.png",
         colorTheme: "orange"
     },
     {
         value: "lejos",
-        label: "Lejos: Los brazos se inclinan hacia fuera del cuerpo y el torso se inclina hacia adelante.",
-        image: "/images/norma36/dist_manos_esp_4.png",
+        label: "Lejos: Los brazos se inclinan lejos del cuerpo y el torso se dobla hacia adelante.",
+        image: "/images/norma36/dist_manos_esp_eq_3.png",
         colorTheme: "red"
         }
 ];
 
-const opcionesCargaTorso = [
+const opcionesRegLevantamiento = [
     {
-        value: "simetrico",
-        label: "La carga y las manos simétricamente enfrente del torso ",
-        image: "/images/norma36/carga_torso_1.png",
+        value: "encima",
+        label: "Por encima de la rodilla y/o por debajo de la altura del codo.",
+        image: "/images/norma36/reg_levantamiento_eq_1.png",
         colorTheme: "green"
     },
     {
-        value: "asimetrico",
-        label: "La carga y las manos asimétricas, cuerpo en posición vertical",
-        image: "/images/norma36/carga_torso_2.png",
+        value: "debajo",
+        label: "Por debajo de la rodilla y/o por encima de la altura del codo.",
+        image: "/images/norma36/reg_levantamiento_eq_2.png",
         colorTheme: "orange"
     },
     {
-        value: "alado",
-        label: "Transportando con una mano a un lado del individuo",
-        image: "/images/norma36/carga_torso_3.png",
+        value: "cabeza",
+        label: "A la altura de la cabeza o por arriba, o a nivel de piso o por debajo.",
+        image: "/images/norma36/reg_levantamiento_eq_3.png",
         colorTheme: "red"
+    }
+];
+
+const opcionesTorFlexTorso = [
+    {
+        value: "poca",
+        label: "Poca o ninguna torsión o flexión lateral del torso.",
+        //image: "/images/norma36/tor_flex_torso_1.png",
+        colorTheme: "green"
     },
     {
-        value: "sobre_hombro",
-        label: "Transporte de carga apoyada sobre un hombro ",
-        image: "",
-        colorTheme: "purple"
+        value: "tor_o_flex",
+        label: "Torsión o flexión lateral del torso.",
+        //image: "/images/norma36/tor_flex_torso_2.png",
+        colorTheme: "orange"
+    },
+    {
+        value: "tor_y_flex",
+        label: "Torsión y flexión lateral del torso.",
+        //image: "/images/norma36/tor_flex_torso_3.png",
+        colorTheme: "red"
     }
 ];
 
@@ -128,77 +137,53 @@ const opcionesFactoresAmbientales = [
     }
 ];
 
-const opcionesDistanciaTrans = [
+const opcionesComunicacionControl = [
     {
-        value: "2_a_4",
-        label: "De 2 a 4 metros.",
+        value: "bien",
+        label: "Bien",
         colorTheme: "green"
     },
     {
-        value: "4_a_10",
-        label: "Más de 4 metros y menos de 10 metros.",
+        value: "regular",
+        label: "Regular.",
         colorTheme: "orange"
     },
     {
-        value: "mas_10",
-        label: "Más de 10 metros.",
+        value: "mala",
+        label: "Malo o deficiente.",
         colorTheme: "red"
     }
 ];
 
-const opcionesObstRuta = [
-    {
-        value: "Sin_obst",
-        label: "Sin obstáculos y la ruta de transporte es plana .",
-        colorTheme: "green"
-    },
-    {
-        value: "riesgo_tropiezo",
-        label: "Pendiente pronunciada o subir escalones o pasar a través de puertas estrechas o riesgo de tropezar.",
-        colorTheme: "orange"
-    },
-    {
-        value: "empinado",
-        label: "Subir por escaleras y/o pendientes empinadas.",
-        colorTheme: "red"
-    }
-];
-
-export const Transporte = ({ formData, handleInputChange, errors }) => {
+export const ManejoEquipo = ({ formData, handleInputChange, errors }) => {
     return (
         <>
-            <div className="form-range-container">
-
+            <div className='form-range-container'>
                 <div className="form-input">
                     <Label 
-                        htmlFor="frecuenciaCarga"
-                        title="Ingrese la cantidad de veces que realiza la carga al día."
+                        htmlFor="personasEquipo"
+                        title="Ingrese la cantidad de personal que conforma el equipo."
                     > 
-                        Frecuencia de la carga al día:
+                        ¿Cuántas personas conforman el equipo?:
                     </Label>
                     <Select
-                        id="frecuenciaCarga"
-                        name='frecuencia_carga'
-                        value={formData.frecuencia_carga}
+                        id="personasEquipo"
+                        name='personas_equipo'
+                        value={formData.personas_equipo}
                         onChange={handleInputChange}
-                        placeholder="Ejemplo: Cada 30 minutos"
-                        error={errors.frecuencia_carga}
+                        placeholder="Ejemplo: 3 personas"
+                        error={errors.personas_equipo}
                     >
-                        <option value="" disabled hidden>Selecciona una frecuencia...</option>
-                        <option>Un transporte al dia</option>
-                        <option>Cada 30 minutos</option>
-                        <option>Cada 5 minutos</option>
-                        <option>Cada 2 minutos</option>
-                        <option>Cada 1 minuto</option>
-                        <option>Cada 12 segundos</option>
+                        <option>2 personas</option>
+                        <option>3 personas</option>
+                        <option>4 personas</option>
                     </Select>
                 </div>
-            </div> 
-
+            </div>
             <div className="form-range-container">
                 <div className="form-input">
                     <Label 
-                        htmlFor="distanciaManosEspalda" 
+                        htmlFor="distanciaManosEspaldaEq" 
                         title="Seleccione la distancia entre las manos y la parte inferior de la espalda"
                     >
                         ¿Cuál es la distancia horizontal entre las manos y la parte inferior de la espalda?
@@ -214,21 +199,35 @@ export const Transporte = ({ formData, handleInputChange, errors }) => {
                 
                 <div className="form-input">
                     <Label
-                        htmlFor="cargaTorso"
-                        title="Seleccione la posición de la carga sobre el torso "
+                        htmlFor="regionLevantamientoEq"
+                        title="Seleccione la región del levantamiento vertical "
                     > 
-                        ¿Cómo es la posición de la carga sobre el torso? 
+                        ¿Cuál es la región de levantamiento vertical?:
                     </Label>
                     <ImageRadioGroup 
-                        name="carga_torso"
-                        options={opcionesCargaTorso}
-                        selectedValue={formData.carga_torso}
+                        name="region_levantamiento"
+                        options={opcionesRegLevantamiento}
+                        selectedValue={formData.region_levantamiento}
                         onChange={handleInputChange}
                     />
                 </div>
             </div>
 
             <div className="form-range-container">
+                <div className="form-input">
+                    <Label 
+                        htmlFor="torsionFlexionTorso"
+                        title="Seleccione la torsion y flexión lateral del torso"
+                    > 
+                        ¿Cómo es la torsión y flexión lateral del torso?
+                    </Label>
+                    <ImageRadioGroup 
+                        name="torsion_flexion_torso"
+                        options={opcionesTorFlexTorso}
+                        selectedValue={formData.torsion_flexion_torso}
+                        onChange={handleInputChange}
+                    />
+                </div>
 
                 <div className="form-input">
                     <Label 
@@ -244,7 +243,10 @@ export const Transporte = ({ formData, handleInputChange, errors }) => {
                         onChange={handleInputChange}
                     />
                 </div>
-
+            </div>
+            
+            
+            <div className="form-range-container">
                 <div className="form-input">
                     <Label 
                         htmlFor="acomplamientoManoCarga"
@@ -259,9 +261,7 @@ export const Transporte = ({ formData, handleInputChange, errors }) => {
                         onChange={handleInputChange}
                     />
                 </div>
-            </div>
 
-            <div className="form-range-container">
                 <div className="form-input">
                     <Label 
                         htmlFor="superficieTrabajo"
@@ -278,7 +278,9 @@ export const Transporte = ({ formData, handleInputChange, errors }) => {
                     />
                 </div>
 
+            </div>
 
+            <div className="form-range-container">
                 <div className="form-input">
                     <Label 
                         htmlFor="factoresAmbientales"
@@ -294,41 +296,22 @@ export const Transporte = ({ formData, handleInputChange, errors }) => {
                         onChange={handleInputChange}
                     />
                 </div>
-            </div>
-            
-            <div className="form-range-container">
-                <div className="form-input">
-                    <Label 
-                        htmlFor="distanciaTransporte"
-                        title="Seleccione la distancia en la que el operador lleva la carga"
-                    > 
-                        ¿Cuál es la distancia de transporte?:
-                    </Label>
-                    <ImageRadioGroup 
-                        name="distancia_transporte"
-                        options={opcionesDistanciaTrans}
-                        selectedValue={formData.distancia_transporte}
-                        onChange={handleInputChange}
-                    />
-                </div>
 
                 <div className="form-input">
                     <Label 
-                        htmlFor="obstaculosRuta"
-                        title="Seleccione el estado de la superficie de trabajo"
+                        htmlFor="comunicacionControl"
+                        title="Seleccione la opción que mejor describa la comunicación entre el equipo"
                     > 
-                        ¿Existen obstáculos en la ruta de transporte?
+                        ¿Cómo es la comunicación y control entre los trabajadores?:
                     </Label>
                     <ImageRadioGroup 
-                        name="obstaculos_ruta"
-                        options={opcionesObstRuta}
-                        selectedValue={formData.obstaculos_ruta}
+                        name="comunicacion_control"
+                        options={opcionesComunicacionControl}
+                        selectedValue={formData.comunicacion_control}
                         onChange={handleInputChange}
                     />
                 </div>
             </div>
-
-            
         </>
     );
 };
