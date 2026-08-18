@@ -8,6 +8,7 @@ import { supabase } from '../services/supabaseClient';
 import { LevantamientoDescenso } from "./PreguntasNorma36/LevantamientoDescenso";
 import { Transporte } from "./PreguntasNorma36/Transporte";
 import { ManejoEquipo } from "./PreguntasNorma36/ManejoEquipo";
+import { Rodar } from "./PreguntasNorma36/Rodar";
 import '../assets/styles/norma36.css';
 import '../assets/styles/formulario.css';
 
@@ -290,25 +291,52 @@ export function Norma36Form () {
                     />
                 </div>
 
-                <div className="form-input">
-                    <Label 
-                        htmlFor="pesoCarga"
-                        title="Ingrese el número del peso de la carga en kilos"
-                    > 
-                        Peso de la carga en kilos:
-                    </Label>
-                    <Input
-                        type="number"
-                        id="pesoCarga"
-                        name='peso_carga'
-                        value={formData.peso_carga}
-                        onChange={handleInputChange}
-                        placeholder="Ejemplo: 12"
-                        min = '0'
-                        step ='1'
-                        error={errors.peso_carga}
-                    />
-                </div>
+                {["Levantamiento", "Descenso", "Transporte", "Manejo en equipo"].includes(formData.actividad_trabajador) && (
+                    <div className="form-input">
+                        <Label 
+                            htmlFor="pesoCarga"
+                            title="Ingrese el número del peso de la carga en kilos"
+                        > 
+                            Peso de la carga en kilos:
+                        </Label>
+                        <Input
+                            type="number"
+                            id="pesoCarga"
+                            name='peso_carga'
+                            value={formData.peso_carga}
+                            onChange={handleInputChange}
+                            placeholder="Ejemplo: 12"
+                            min = '0'
+                            step ='1'
+                            error={errors.peso_carga}
+                        />
+                    </div>
+                )}
+
+                {(formData.actividad_trabajador === "Rodar" ) && (
+                    <div className="form-input">
+                        <Label 
+                            htmlFor="pesoCarga"
+                            title="Ingrese el número del peso de la carga en kilos"
+                        > 
+                            Peso de la carga en kilos:
+                        </Label>
+                        <Select
+                            id = 'pesoCarga'
+                            name = 'peso_carga'
+                            value={formData.peso_carga}
+                            onChange={handleInputChange}
+                            placeholder="Ejemplo: De 400 kg a 600 kg"
+                            error={errors.peso_carga}
+                        >
+                            <option>Menos de 400 kg</option>
+                            <option>De 400 kg a 600 kg</option>
+                            <option>De 600 kg a 1,000 kg</option>
+                            <option>Más de 1,000 kg</option>
+                        </Select>
+                    </div>
+
+                )}
             </div>
 
             {(formData.actividad_trabajador === "Levantamiento" || formData.actividad_trabajador === "Descenso") && (
@@ -328,6 +356,14 @@ export function Norma36Form () {
             )}
 
             {(formData.actividad_trabajador === "Manejo en equipo" ) && (
+                <ManejoEquipo
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                    errors={errors}
+                />
+            )}
+
+            {(formData.actividad_trabajador === "Rodar" ) && (
                 <ManejoEquipo
                     formData={formData}
                     handleInputChange={handleInputChange}
