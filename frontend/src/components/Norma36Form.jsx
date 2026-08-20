@@ -9,6 +9,8 @@ import { LevantamientoDescenso } from "./PreguntasNorma36/LevantamientoDescenso"
 import { Transporte } from "./PreguntasNorma36/Transporte";
 import { ManejoEquipo } from "./PreguntasNorma36/ManejoEquipo";
 import { Rodar } from "./PreguntasNorma36/Rodar";
+import { Arrastrar } from "./PreguntasNorma36/Arrastrar";
+import { EmpujeSinEquipo } from "./PreguntasNorma36/EmpujeSinEquipo";
 import '../assets/styles/norma36.css';
 import '../assets/styles/formulario.css';
 
@@ -37,7 +39,11 @@ const ESTADO_INICIAL = {
 
     // Manejo equipo
     comunicacion_control: "",
-    personas_equipo: "", 
+    personas_equipo: "",
+    
+    // Rodar
+    postura_carga: '',
+    patron_trabajo: ''
 };
 
 export function Norma36Form () {
@@ -90,6 +96,13 @@ export function Norma36Form () {
             camposRequeridos.push(
                 'personas_equipo','distancia_manos_espalda', 'region_levantamiento', 'torsion_flexion_torso', 'restricciones_posturales',
                 'acomplamiento_mano_carga', 'superficie_trabajo', 'factores_ambientales', 'comunicacion_control'
+            );
+        }
+
+        if (["Rodar", "Arrastrar", "Girar"].includes(formData.actividad_trabajador)) {
+            camposRequeridos.push(
+                'postura_carga','acomplamiento_mano_carga', 'patron_trabajo', 'distancia_transporte', 'superficie_trabajo',
+                'obstaculos_ruta', 'factores_ambientales'
             );
         }
 
@@ -335,8 +348,56 @@ export function Norma36Form () {
                             <option>Más de 1,000 kg</option>
                         </Select>
                     </div>
-
                 )}
+
+                {(formData.actividad_trabajador === "Arrastrar" ) && (
+                    <div className="form-input">
+                        <Label 
+                            htmlFor="pesoCarga"
+                            title="Ingrese el número del peso de la carga en kilos"
+                        > 
+                            Peso de la carga en kilos:
+                        </Label>
+                        <Select
+                            id = 'pesoCarga'
+                            name = 'peso_carga'
+                            value={formData.peso_carga}
+                            onChange={handleInputChange}
+                            placeholder="Ejemplo: De 50 kg a 80 kg"
+                            error={errors.peso_carga}
+                        >
+                            <option>Menos de 25 kg</option>
+                            <option>De 25 kg a 50 kg</option>
+                            <option>De 50 kg a 80 kg</option>
+                            <option>Más de 80 kg</option>
+                        </Select>
+                    </div>
+                )}
+
+                {(formData.actividad_trabajador === "Girar" ) && (
+                    <div className="form-input">
+                        <Label 
+                            htmlFor="pesoCarga"
+                            title="Ingrese el número del peso de la carga en kilos"
+                        > 
+                            Peso de la carga en kilos:
+                        </Label>
+                        <Select
+                            id = 'pesoCarga'
+                            name = 'peso_carga'
+                            value={formData.peso_carga}
+                            onChange={handleInputChange}
+                            placeholder="Ejemplo: Más de 150 kg"
+                            error={errors.peso_carga}
+                        >
+                            <option>Menos de 80 kg</option>
+                            <option>De 80 kg a 120 kg</option>
+                            <option>De 120 kg a 150 kg</option>
+                            <option>Más de 150 kg</option>
+                        </Select>
+                    </div>
+                )}
+
             </div>
 
             {(formData.actividad_trabajador === "Levantamiento" || formData.actividad_trabajador === "Descenso") && (
@@ -363,8 +424,24 @@ export function Norma36Form () {
                 />
             )}
 
-            {(formData.actividad_trabajador === "Rodar" ) && (
-                <ManejoEquipo
+            {/* {(formData.actividad_trabajador === "Rodar" ) && (
+                <Rodar
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                    errors={errors}
+                />
+            )}
+            
+            {(formData.actividad_trabajador === "Arrastrar" ) && (
+                <Arrastrar
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                    errors={errors}
+                />
+            )} */}
+
+            {["Rodar", "Arrastrar", "Girar"].includes(formData.actividad_trabajador) && (
+                <EmpujeSinEquipo
                     formData={formData}
                     handleInputChange={handleInputChange}
                     errors={errors}

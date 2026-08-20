@@ -129,7 +129,7 @@ const opcionesObstRuta = [
     }
 ];
 
-export const Rodar = ({ formData, handleInputChange, errors }) => {
+export const Girar = ({ formData, handleInputChange, errors }) => {
     return (
         <>
             <div className="form-range-container">
