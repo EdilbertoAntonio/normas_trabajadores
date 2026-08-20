@@ -11,6 +11,7 @@ import { ManejoEquipo } from "./PreguntasNorma36/ManejoEquipo";
 import { Rodar } from "./PreguntasNorma36/Rodar";
 import { Arrastrar } from "./PreguntasNorma36/Arrastrar";
 import { EmpujeSinEquipo } from "./PreguntasNorma36/EmpujeSinEquipo";
+import { EmpujeConEquipo } from "./PreguntasNorma36/EmpujeConEquipo";
 import '../assets/styles/norma36.css';
 import '../assets/styles/formulario.css';
 
@@ -41,9 +42,12 @@ const ESTADO_INICIAL = {
     comunicacion_control: "",
     personas_equipo: "",
     
-    // Rodar
+    // Sin equipo
     postura_carga: '',
-    patron_trabajo: ''
+    patron_trabajo: '',
+
+    // Con equipo
+    condicion_equipo:''
 };
 
 export function Norma36Form () {
@@ -103,6 +107,13 @@ export function Norma36Form () {
             camposRequeridos.push(
                 'postura_carga','acomplamiento_mano_carga', 'patron_trabajo', 'distancia_transporte', 'superficie_trabajo',
                 'obstaculos_ruta', 'factores_ambientales'
+            );
+        }
+
+        if (["Empujar con equipo auxiliar (pequeño)", "Empujar con equipo auxiliar (mediano)", "Empujar con equipo auxiliar (grande)"].includes(formData.actividad_trabajador)) {
+            camposRequeridos.push(
+                'postura_carga','acomplamiento_mano_carga', 'patron_trabajo', 'distancia_transporte', 'superficie_trabajo',
+                'obstaculos_ruta', 'factores_ambientales', 'condicion_equipo'
             );
         }
 
@@ -398,6 +409,81 @@ export function Norma36Form () {
                     </div>
                 )}
 
+                {(formData.actividad_trabajador === "Empujar con equipo auxiliar (pequeño)" ) && (
+                    <div className="form-input">
+                        <Label 
+                            htmlFor="pesoCarga"
+                            title="Ingrese el número del peso de la carga en kilos"
+                        > 
+                            Peso de la carga en kilos:
+                        </Label>
+                        <Select
+                            id = 'pesoCarga'
+                            name = 'peso_carga'
+                            value={formData.peso_carga}
+                            onChange={handleInputChange}
+                            placeholder="Ejemplo: Más de 200 kg"
+                            error={errors.peso_carga}
+                        >
+                            <option>Menos de 50 kg</option>
+                            <option>De 50 kg a 100 kg</option>
+                            <option>De 100 kg a 200 kg</option>
+                            <option>Más de 200 kg</option>
+                            <option>La carga excede la capacidad nominal del equipo</option>
+                        </Select>
+                    </div>
+                )}
+
+                {(formData.actividad_trabajador === "Empujar con equipo auxiliar (mediano)" ) && (
+                    <div className="form-input">
+                        <Label 
+                            htmlFor="pesoCarga"
+                            title="Ingrese el número del peso de la carga en kilos"
+                        > 
+                            Peso de la carga en kilos:
+                        </Label>
+                        <Select
+                            id = 'pesoCarga'
+                            name = 'peso_carga'
+                            value={formData.peso_carga}
+                            onChange={handleInputChange}
+                            placeholder="Ejemplo: De 250 kg a 500 kg"
+                            error={errors.peso_carga}
+                        >
+                            <option>Menos de 250 kg</option>
+                            <option>De 250 kg a 500 kg</option>
+                            <option>De 500 kg a 750 kg</option>
+                            <option>Más de 750 kg</option>
+                            <option>La carga excede la capacidad nominal del equipo</option>
+                        </Select>
+                    </div>
+                )}
+
+                {(formData.actividad_trabajador === "Empujar con equipo auxiliar (grande)" ) && (
+                    <div className="form-input">
+                        <Label 
+                            htmlFor="pesoCarga"
+                            title="Ingrese el número del peso de la carga en kilos"
+                        > 
+                            Peso de la carga en kilos:
+                        </Label>
+                        <Select
+                            id = 'pesoCarga'
+                            name = 'peso_carga'
+                            value={formData.peso_carga}
+                            onChange={handleInputChange}
+                            placeholder="Ejemplo: De 1,000 kg a 1,500 kg"
+                            error={errors.peso_carga}
+                        >
+                            <option>Menos de 600 kg</option>
+                            <option>De 600 kg a 1,000 kg</option>
+                            <option>De 1,000 kg a 1,500 kg</option>
+                            <option>Más de 1,500 kg</option>
+                            <option>La carga excede la capacidad nominal del equipo</option>
+                        </Select>
+                    </div>
+                )}
+
             </div>
 
             {(formData.actividad_trabajador === "Levantamiento" || formData.actividad_trabajador === "Descenso") && (
@@ -442,6 +528,15 @@ export function Norma36Form () {
 
             {["Rodar", "Arrastrar", "Girar"].includes(formData.actividad_trabajador) && (
                 <EmpujeSinEquipo
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                    errors={errors}
+                />
+            )}
+
+            
+            {["Empujar con equipo auxiliar (pequeño)", "Empujar con equipo auxiliar (mediano)", "Empujar con equipo auxiliar (grande)"].includes(formData.actividad_trabajador) && (
+                <EmpujeConEquipo
                     formData={formData}
                     handleInputChange={handleInputChange}
                     errors={errors}
