@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from './Button';
 import Label from './Label';
 import Input from './Input';
@@ -48,6 +48,27 @@ const ESTADO_INICIAL = {
     condicion_equipo:''
 };
 
+// const CAMPOS_ESPECIFICOS = [
+//     'peso_carga',
+//     'frecuencia_carga',
+//     'distancia_manos_espalda',
+//     'region_levantamiento',
+//     'torsion_flexion_torso',
+//     'restricciones_posturales',
+//     'acomplamiento_mano_carga',
+//     'superficie_trabajo',
+//     'factores_ambientales',
+//     'carga_torso',
+//     'distancia_transporte',
+//     'obstaculos_ruta',
+//     'comunicacion_control',
+//     'personas_equipo',
+//     'postura_carga',
+//     'patron_trabajo',
+//     'otros_factores',
+//     'condicion_equipo'
+// ];
+
 export function Norma36Form () {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -70,6 +91,20 @@ export function Norma36Form () {
         }
     };
 
+    // useEffect(() => {
+    // // Solo limpiar si hay una actividad seleccionada (no vacía)
+    //     if (formData.actividad_trabajador) {
+    //         setFormData(prev => {
+    //             const nuevasClaves = { ...prev };
+    //   // Reiniciamos todos los campos específicos a ""
+    //             CAMPOS_ESPECIFICOS.forEach(campo => {
+    //                 nuevasClaves[campo] = "";
+    //             });
+    //             return nuevasClaves;
+    //         });
+    //     }
+    // }, [formData.actividad_trabajador]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -90,8 +125,8 @@ export function Norma36Form () {
         } 
         if (formData.actividad_trabajador === "Transporte") {
             camposRequeridos.push(
-                'frecuencia_carga', 'distancia_manos_espalda', 'carga_torso', 'distancia_transporte', "obstaculos_ruta",
-                "restricciones_posturales", "acomplamiento_mano_carga", 'superficie_trabajo', 'factores_ambientales'
+                'frecuencia_carga', 'distancia_manos_espalda', 'carga_torso', "restricciones_posturales", "acomplamiento_mano_carga",
+                'superficie_trabajo', 'factores_ambientales', 'distancia_transporte', "obstaculos_ruta"
             );
         } 
         if (formData.actividad_trabajador === "Manejo en equipo") {

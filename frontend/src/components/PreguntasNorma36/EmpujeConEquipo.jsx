@@ -7,6 +7,7 @@ const opcionesPosturaCarga = [
         value: "buena",
         // label: "Buena (El torso se encuentra verticalmente en su mayor parte y no está torcido, las manos están entre la cadera y la altura del hombro)",
         label: "Buena",
+        image: "/images/norma36/postura_eq_carga_buena.png",
         colorTheme: "green"
     },
     {
@@ -14,12 +15,14 @@ const opcionesPosturaCarga = [
         // label: "Razonable (El cuerpo está inclinado en la dirección del esfuerzo, el torso está visiblemente flexionado y torcido, las manos están por debajo de la altura de la cadera)",
         label: 'Razonable',
         //image: "/images/norma36/dist_manos_esp_3.png",
+        image: "/images/norma36/postura_eq_carga_razonable.png",
         colorTheme: "orange"
     },
     {
         value: "pobre",
         // label: "Pobre o deficiente (El cuerpo está muy inclinado o el trabajador se pone en cuclillas, se arrodilla o necesita empujar con la espalda contra la carga y el torso está severamente flexionado o torcido, las manos están detrás o a un lado del cuerpo o por encima de la altura del hombro) ",
         label:'Pobre o deficiente',
+        image: "/images/norma36/postura_eq_carga_pobre_4.png",
         colorTheme: "red"
         }
 ];
@@ -28,16 +31,19 @@ const opcionesAcompManoCarga = [
     {
         value: "bueno",
         label: "Buen agarre.",
+        image: "/images/norma36/acoplamiento_bueno.png",
         colorTheme: "green"
     },
     {
         value: "regular",
         label: "Agarre regular.",
+        image: "/images/norma36/acoplamiento_razonable.png",
         colorTheme: "orange"
     },
     {
         value: "mal",
         label: "Mal agarre.",
+        image: "/images/norma36/acoplamiento_pobre.png",
         colorTheme: "red"
     }
 ];
@@ -203,6 +209,44 @@ export const EmpujeConEquipo = ({ formData, handleInputChange, errors }) => {
 
     const opcionesPesoActuales = obtenerOpcionesPeso();
 
+    const obtenerContenidoTooltip = () => {
+        if (formData.actividad_trabajador === "Empujar con equipo auxiliar (pequeño)") {
+            return {
+                instrucciones: (
+                    <>
+                        Las ilustraciones en cada sección son sólo una guía para ayudar a comprender mejor, no son detalladas o exhaustivas.  
+                        Pequeño con una o dos ruedas: por ejemplo, carretillas, contenedores con ruedas o diablos de carga. 
+                        Con este equipo el trabajador soporta parte de la carga. 
+                    </>
+                ),
+                imagen: "/images/norma36/equipo_pequeno.png"
+            };
+        }
+        if (formData.actividad_trabajador === "Empujar con equipo auxiliar (mediano)") {
+            return {
+                instrucciones: (
+                    <>
+                        Las ilustraciones en cada sección son sólo una guía para ayudar a comprender mejor, no son detalladas o exhaustivas.                
+                        Mediano, con tres o más ruedas fijas y/o ruedas móviles (rodajas): por ejemplo, jaulas con ruedas, contenedores con ruedas.
+                    </>
+                ),
+                imagen: "/images/norma36/equipo_mediano.png"
+            };
+        }
+        // Por defecto (Equipo grande)
+        return {
+            instrucciones: (
+                <>
+                    Las ilustraciones en cada sección son sólo una guía para ayudar a comprender mejor, no son detalladas o exhaustivas.    
+                    Grande, dirigible sobre rieles: por ejemplo, patines o sistemas de rieles superiores. 
+                </>
+            ),
+            imagen: "/images/norma36/equipo_grande.png"
+        };
+    };
+
+    const contenidoTooltip = obtenerContenidoTooltip();
+
     return (
         <>
             <div className="form-range-container">
@@ -217,15 +261,24 @@ export const EmpujeConEquipo = ({ formData, handleInputChange, errors }) => {
                         </Label>
                         <InfoTooltip title="Evaluación de la carga">
                             <p>
-                                <strong>I.-</strong> Identificar la actividad. Si se realizan dos o más actividades (por ejemplo, rodando y girando sobre su base), 
-                                realice una evaluación para cada tipo de actividad;
+                                <strong>I.-</strong> Evaluar la masa total movida, si se mueve más de un equipo de carga (por ejemplo, dos carretillas);
                                 <br></br>
-                                <strong>II.-</strong>Averiguar la masa de la carga movida (de alguna etiqueta de la carga, preguntando a los trabajadores o pesando la carga u objeto)
+                                <strong>II.-</strong>Conocer y determinar la carga total movida (masa del equipo auxiliar y masa de las cargas transportadas) 
+                                con base al etiquetado, preguntando a los trabajadores o pesando la carga
                                 <br></br>
-                                <strong>III.-</strong>Evaluar la masa total a mover, si dos o más cargas son movidas a la vez, y
+                                <strong>III.-</strong>Evaluar el equipo con la carga de mayor masa que es probable que se mueva, si se utiliza el mismo equipo para mover diferentes cargas.
                                 <br></br>
-                                <strong>IV.-</strong>Evaluar la actividad con la carga de mayor masa, si se mueven cargas de diferente masa.  
+                                {contenidoTooltip.instrucciones}
                             </p>
+                            {contenidoTooltip.imagen && (
+                                <div style={{ textAlign: 'center', margin: '15px 0' }}>
+                                    <img 
+                                        src={contenidoTooltip.imagen} 
+                                        alt="Ejemplo de equipo" 
+                                        style={{ maxWidth: '100%', borderRadius: '8px', border: '1px solid #ddd' }} 
+                                    />
+                                </div>
+                            )}
                             <table className="tooltip-table">
                                 <tbody>
                                     <tr className="bg-green">
@@ -243,10 +296,15 @@ export const EmpujeConEquipo = ({ formData, handleInputChange, errors }) => {
                                         <td>{opcionesPesoActuales[2]?.label}</td>
                                         <td>Valor: 4</td>
                                     </tr>
-                                    <tr className="bg-purple">
+                                    <tr className="bg-red">
                                         <td><strong>Muy alto</strong></td>
                                         <td>{opcionesPesoActuales[3]?.label}</td>
                                         <td>Valor: 8</td>
+                                    </tr>
+                                    <tr className="bg-purple">
+                                        <td><strong>Inaceptable</strong></td>
+                                        <td>{opcionesPesoActuales[4]?.label}</td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>

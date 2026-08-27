@@ -7,19 +7,21 @@ const opcionesPosturaCarga = [
         value: "buena",
         // label: "Buena (El torso se encuentra verticalmente en su mayor parte y no está torcido, las manos están entre la cadera y la altura del hombro)",
         label: "Buena",
+        image: "/images/norma36/postura_carga_buena.png",
         colorTheme: "green"
     },
     {
         value: "razonable",
         // label: "Razonable (El cuerpo está inclinado en la dirección del esfuerzo, el torso está visiblemente flexionado y torcido, las manos están por debajo de la altura de la cadera)",
         label: 'Razonable',
-        //image: "/images/norma36/dist_manos_esp_3.png",
+        image: "/images/norma36/postura_carga_razonable.png",
         colorTheme: "orange"
     },
     {
         value: "pobre",
         // label: "Pobre o deficiente (El cuerpo está muy inclinado o el trabajador se pone en cuclillas, se arrodilla o necesita empujar con la espalda contra la carga y el torso está severamente flexionado o torcido, las manos están detrás o a un lado del cuerpo o por encima de la altura del hombro) ",
         label:'Pobre o deficiente',
+        image: "/images/norma36/postura_carga_pobre.png",
         colorTheme: "red"
         }
 ];
@@ -28,16 +30,19 @@ const opcionesAcompManoCarga = [
     {
         value: "bueno",
         label: "Buen agarre.",
+        image: "/images/norma36/acoplamiento_bueno.png",
         colorTheme: "green"
     },
     {
         value: "regular",
         label: "Agarre regular.",
+        image: "/images/norma36/acoplamiento_razonable.png",
         colorTheme: "orange"
     },
     {
         value: "mal",
         label: "Mal agarre.",
+        image: "/images/norma36/acoplamiento_pobre.png",
         colorTheme: "red"
     }
 ];
@@ -162,7 +167,26 @@ export const EmpujeSinEquipo = ({ formData, handleInputChange, errors }) => {
         return []; // Por seguridad
     };
 
+    const obtenerContenidoTooltip = () => {
+        if (formData.actividad_trabajador === "Rodar") {
+            return {
+                imagen: "/images/norma36/rodando.png"
+            };
+        }
+        if (formData.actividad_trabajador === "Girar") {
+            return {
+                imagen: "/images/norma36/girando.png"
+            };
+        }
+        // Por defecto Arrastrar
+        return {
+            imagen: "/images/norma36/arrastrando.png"
+        };
+    };
+
     const opcionesPesoActuales = obtenerOpcionesPeso();
+
+    const contenidoTooltip = obtenerContenidoTooltip();
 
     return (
         <>
@@ -186,7 +210,18 @@ export const EmpujeSinEquipo = ({ formData, handleInputChange, errors }) => {
                                 <strong>III.-</strong>Evaluar la masa total a mover, si dos o más cargas son movidas a la vez, y
                                 <br></br>
                                 <strong>IV.-</strong>Evaluar la actividad con la carga de mayor masa, si se mueven cargas de diferente masa.  
+                                <br></br>
+                                Las ilustraciones son sólo una guía para ayudar a comprender mejor, no son detalladas o exhaustivas.
                             </p>
+                            {contenidoTooltip.imagen && (
+                                <div style={{ textAlign: 'center', margin: '15px 0' }}>
+                                    <img 
+                                        src={contenidoTooltip.imagen} 
+                                        alt="Ejemplo de equipo" 
+                                        style={{ maxWidth: '100%', borderRadius: '8px', border: '1px solid #ddd' }} 
+                                    />
+                                </div>
+                            )}
                             <table className="tooltip-table">
                                 <tbody>
                                     <tr className="bg-green">
