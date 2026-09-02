@@ -4,6 +4,7 @@ import '../assets/styles/sidebar.css';
 
 const SIDEBAR_ITEMS = [
     { name: 'Formulario', icon: 'assignment', to: '/Norma36' },
+    { name: 'Auditorias', icon: 'table', to: '/TablaAuditorias' },
 ];
 
 export const SideBar = ({ isMobileMenuOpen, closeMobileMenu }) => {

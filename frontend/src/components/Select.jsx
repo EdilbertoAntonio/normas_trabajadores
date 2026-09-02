@@ -1,7 +1,7 @@
 import React from 'react';
 import '../assets/styles/select.css';
 
-const Select = ({id, value, onChange,placeholder = "Select an option", className = '', error = false, children, ...props}) => {
+const Select = ({id, value, onChange,placeholder = "Select an option", className = '', error = false, showPlaceholder = true, children, ...props}) => {
     return (
         <div className="custom-select">
             <select
@@ -11,9 +11,11 @@ const Select = ({id, value, onChange,placeholder = "Select an option", className
                 className={`select-field ${error ? 'error' : ''} ${className}`}
                 {...props}
             >
-                <option value="">
-                    {placeholder}
-                </option>
+                {showPlaceholder && (
+                    <option value="">
+                        {placeholder}
+                    </option>
+                )}
                 {children}
             </select>
         </div>

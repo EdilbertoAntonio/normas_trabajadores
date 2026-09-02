@@ -48,26 +48,26 @@ const ESTADO_INICIAL = {
     condicion_equipo:''
 };
 
-// const CAMPOS_ESPECIFICOS = [
-//     'peso_carga',
-//     'frecuencia_carga',
-//     'distancia_manos_espalda',
-//     'region_levantamiento',
-//     'torsion_flexion_torso',
-//     'restricciones_posturales',
-//     'acomplamiento_mano_carga',
-//     'superficie_trabajo',
-//     'factores_ambientales',
-//     'carga_torso',
-//     'distancia_transporte',
-//     'obstaculos_ruta',
-//     'comunicacion_control',
-//     'personas_equipo',
-//     'postura_carga',
-//     'patron_trabajo',
-//     'otros_factores',
-//     'condicion_equipo'
-// ];
+const CAMPOS_ESPECIFICOS = [
+    'peso_carga',
+    'frecuencia_carga',
+    'distancia_manos_espalda',
+    'region_levantamiento',
+    'torsion_flexion_torso',
+    'restricciones_posturales',
+    'acomplamiento_mano_carga',
+    'superficie_trabajo',
+    'factores_ambientales',
+    'carga_torso',
+    'distancia_transporte',
+    'obstaculos_ruta',
+    'comunicacion_control',
+    'personas_equipo',
+    'postura_carga',
+    'patron_trabajo',
+    'otros_factores',
+    'condicion_equipo'
+];
 
 export function Norma36Form () {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -91,19 +91,19 @@ export function Norma36Form () {
         }
     };
 
-    // useEffect(() => {
-    // // Solo limpiar si hay una actividad seleccionada (no vacía)
-    //     if (formData.actividad_trabajador) {
-    //         setFormData(prev => {
-    //             const nuevasClaves = { ...prev };
-    //   // Reiniciamos todos los campos específicos a ""
-    //             CAMPOS_ESPECIFICOS.forEach(campo => {
-    //                 nuevasClaves[campo] = "";
-    //             });
-    //             return nuevasClaves;
-    //         });
-    //     }
-    // }, [formData.actividad_trabajador]);
+    useEffect(() => {
+    // Solo limpiar si hay una actividad seleccionada (no vacía)
+        if (formData.actividad_trabajador) {
+            setFormData(prev => {
+                const nuevasClaves = { ...prev };
+      // Reiniciamos todos los campos específicos a ""
+                CAMPOS_ESPECIFICOS.forEach(campo => {
+                    nuevasClaves[campo] = "";
+                });
+                return nuevasClaves;
+            });
+        }
+    }, [formData.actividad_trabajador]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -194,23 +194,36 @@ export function Norma36Form () {
                     return;
                 }
 
-                // const datosFinales = {
-                //     ...formData,
-                //     auditor_email: user.email, 
-                // };
-
-                const { nombre_empresa, ...restoDelFormulario } = formData;
-
-                const datosLimpios = Object.fromEntries(
-                    Object.entries(restoDelFormulario).filter(([key, value]) => value !== "")
-                );
+                const datosParaEnviar = {};
+                // Incluimos los campos comunes que siempre se necesitan
+                //datosParaEnviar.nombre_empresa = formData.nombre_empresa;
+                //datosParaEnviar.actividad_trabajador = formData.actividad_trabajador;
+                // Agregamos el resto de campos requeridos (excepto los ya incluidos)
+                camposRequeridos.forEach(key => {
+                    if (key !== 'nombre_empresa') {
+                        datosParaEnviar[key] = formData[key] || "";
+                    }
+                });
 
                 const datosFinales = {
                     auditor_email: user.email, 
-                    tipo_norma: "NOM-036", // Especificamos qué norma es
-                    nombre_empresa: nombre_empresa,
-                    datos_formulario: datosLimpios // El resto se va empaquetado al JSONB
+                    tipo_norma: "NOM-036",
+                    nombre_empresa: formData.nombre_empresa,
+                    datos_formulario: datosParaEnviar // solo los campos requeridos
                 };
+
+                // const { nombre_empresa, ...restoDelFormulario } = formData;
+
+                // const datosLimpios = Object.fromEntries(
+                //     Object.entries(restoDelFormulario).filter(([key, value]) => value !== "")
+                // );
+
+                // const datosFinales = {
+                //     auditor_email: user.email, 
+                //     tipo_norma: "NOM-036", // Especificamos qué norma es
+                //     nombre_empresa: nombre_empresa,
+                //     datos_formulario: datosLimpios // El resto se va empaquetado al JSONB
+                // };
                 
                 const { data, error } = await supabase
                     .from('auditorias')
@@ -219,9 +232,22 @@ export function Norma36Form () {
 
                 if (error) throw error;
 
-                console.log("Registro guardado con folio:", data[0].id);
+                const folioGenerado = data[0].id.substring(0, 8).toUpperCase();
+
+                navigator.clipboard.writeText(folioGenerado).then(() => {
+                    // 3. Modificamos la alerta para avisarle al usuario que ya está copiado
+                    alert(`¡Respuestas guardadas exitosamente!\n\nTu folio de auditoría es: ${folioGenerado}\n\n(¡El folio se ha copiado automáticamente a tu portapapeles!)`);
+                }).catch(err => {
+                    // Por si el navegador bloquea el portapapeles
+                    alert(`¡Respuestas guardadas exitosamente!\n\nTu folio de auditoría es: ${folioGenerado}`);
+                });
                 
-                alert("¡Respuestas guardadas exitosamente!");
+                // Mostramos la alerta con el folio
+                //alert(`¡Respuestas guardadas exitosamente!\n\nTu folio de auditoría es: ${folioGenerado}`);
+
+                //console.log("Registro guardado con folio:", data[0].id);
+                //
+                //alert("¡Respuestas guardadas exitosamente!");
                 
                 setFormData(ESTADO_INICIAL);
 
