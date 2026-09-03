@@ -41,6 +41,9 @@
 }
 .table-wrapper h2{
     margin-left: 15px;
+    margin-top: 15px;
+    margin-bottom: 0;
+    /* margin: 10px 15px; */
 }
 table {
     min-width: max-content; 
@@ -78,7 +81,7 @@ tr:hover {
     .table-wrapper {
         width: 98%; 
         margin: 2px auto;
-        height: calc(100vh - 120px); 
+        height: calc(100vh - 80px); 
         overflow-x: auto; 
     }
     .table-scroll-container {

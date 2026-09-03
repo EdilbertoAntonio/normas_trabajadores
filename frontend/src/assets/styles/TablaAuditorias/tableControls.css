@@ -1,34 +1,140 @@
+@import '../variables.css';
+
 .table-controls-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
-    gap: 20px;
+    padding: 12px 0;
+    gap: 15px;
+}
+
+/* .table-controls-container label{
+    white-space: nowrap;
+} */
+
+.delete-filters {
+    background-color: var(--secondary-color-red); /* Fondo azul */
+    color: var(--primary-color-white); /* Letra blanca */
+    border: 1px solid var(--primary-color-red);  /* ¡Sintaxis corregida! */
+    border-radius: 10px;
+    outline: none; 
+    /* box-shadow: 0 0 5px var(--secondary-color-gradient-blue);  */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* .table-controls-container input{
+    border: 1px solid var(--primary-color-blue); 
+} */
+
+.table-controls-container input, select, button{
+    height: 50px;
+}
+.table-controls-container select{
+    width: 100%;
+}
+.table-controls-container input:focus{
+    border-color: var(--primary-color-blue); 
+    outline: none; 
+    box-shadow: 0 0 5px var(--secondary-color-gradient-blue); 
 }
 
 .search-box {
     flex: 1;
-    min-width: 250px;
+    min-width: 180px;
 }
 
-.filters-box {
+.actions-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.pagination-box .custom-select {
+    width: 100px;
+}
+
+.pagination-box select {
+    width: 100%; /* El select se adapta al contenedor de 100px */
+}
+/* Estilos para el contenedor flotante */
+.filter-dropdown-container {
+    position: relative;
+}
+.filter-dropdown-container button {
+    background-color: var(--primary-color-white); /* Fondo azul */
+    color: var(--primary-color-black); /* Letra blanca */
+    border: 1px solid var(--secondary-color-gray);  /* ¡Sintaxis corregida! */
+    border-radius: 10px;
+    outline: none; 
+    /* box-shadow: 0 0 5px var(--secondary-color-gradient-blue);  */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.filter-dropdown-container button:focus {
+    opacity: 0.9;
+    box-shadow: 0 0 5px var(--secondary-color-gradient-blue); 
+    border: 1px solid var(--primary-color-blue);
+    color: var(--primary-color-blue);
+}
+.filter-dropdown-menu {
+    position: absolute;
+    top: 60px; /* Aparece justo debajo del botón */
+    right: 0;
+    background-color: var(--primary-color-white);
+    border: 1px solid var(--primary-color-blue);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 20; /* Mayor a 10 para que pase por encima de tus headers sticky */
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    /* gap: 10px; */
+    animation: fadeIn 0.2s ease-out;
+
+    max-height: calc(100vh - 80px); /* Nunca será más alto que la ventana */
+    overflow-y: auto;
+}
+/* .filters-box {
     display: flex;
     gap: 15px;
     align-items: center;
 }
 
-.date-filters {
+.filters-box button{
+    background-color: var(--secondary-color-red);
+    width: 40px;
+} */
+
+/* .date-filters {
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-direction: column;
+    flex: 1;
 }
 
 .date-separator {
     color: var(--secondary-color-dark-gray);
     font-size: 14px;
     font-weight: 500;
-}
+} */
+/* .date-filters-grid {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    flex-direction: column;
+    flex: 1;
+} */
 
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Espacio entre el Label y el Input */
+    margin-bottom: 12px; /* Espacio hacia abajo para separar del siguiente filtro */
+    width: 100%;
+}
 /* Responsivo para Celulares */
 @media (max-width: 768px) {
     .table-controls-container {
@@ -51,12 +157,40 @@
         width: 100%;
     }
 
-    .date-filters {
-        flex-direction: column;
+    .actions-box {
+        justify-content: space-between;
         width: 100%;
-        gap: 10px;
     }
-    .date-separator {
-        display: none; /* Ocultamos la "a" en celular para ahorrar espacio */
+
+
+    .filter-dropdown-menu {
+        position: fixed; /* Rompe la atadura con el botón */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Centrado perfecto */
+        width: 90vw; /* Ocupará el 90% del ancho de la pantalla */
+        max-width: 350px; /* Pero no crecerá más de esto en tablets */
+        max-height: 80vh; /* Límite de altura: 80% de la pantalla */
+        overflow-y: auto; /* Habilita el scroll interno si el menú es más alto que la pantalla */
+        z-index: 9999; /* Asegura que esté por encima de TODO */
+        box-sizing: border-box;
+    }    
+}
+
+@media (max-width: 1024px) and (orientation: landscape), (max-height: 600px) {
+    .filter-dropdown-menu {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        right: auto; /* ¡AQUÍ ESTÁ LA MAGIA! Anula el right: 0 del escritorio */
+        bottom: auto;
+        transform: translate(-50%, -50%);
+        width: 90vw;
+        max-width: 350px;
+        max-height: 85vh; /* Le damos el 85% de la altura disponible */
+        overflow-y: auto; /* Scroll activado */
+        overflow-x: auto;
+        z-index: 9999;
+        box-sizing: border-box;
     }
 }
