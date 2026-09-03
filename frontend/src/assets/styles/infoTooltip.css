@@ -1,0 +1,144 @@
+@import './variables.css';
+
+.tooltip-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
+.tooltip-trigger {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    /* color: var(--primary-color-blue); */
+    color: var(--secondary-color-dark-gray);
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.tooltip-trigger:hover {
+    background-color: var(--secondary-color-blue-light);
+}
+
+.tooltip-trigger i {
+    font-size: var(--font-size-medium);
+    line-height: 1; /* Remueve cualquier espacio extra de texto dentro del botón */
+    transform: translateY(-2px);
+}
+
+.tooltip-popover {
+    position: absolute;
+    top: 30px; /* Aparece justo debajo del icono */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    background-color: var(--primary-color-white);
+    border: 1px solid var(--secondary-color-gradient-blue);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    animation: fadeInTooltip 0.2s ease-out;
+    cursor: default;
+}
+
+/* El triangulito superior (flecha) */
+.tooltip-popover::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
+    background-color: var(--primary-color-white);
+    border-left: 1px solid var(--secondary-color-gradient-blue);
+    border-top: 1px solid var(--secondary-color-gradient-blue);
+}
+
+.tooltip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.tooltip-header h4 {
+    margin: 0;
+    font-size: 14px;
+    color: var(--primary-color-blue);
+}
+
+.tooltip-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+}
+
+.tooltip-close:hover {
+    color: #333;
+}
+
+.tooltip-body {
+    padding: 15px;
+    font-size: 13px;
+    color: var(--secondary-color-gray-dark);
+    line-height: 1.5;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.tooltip-body p{
+    margin-top: 0;
+}
+
+/* Estilos específicos para las tablas dentro del tooltip */
+.tooltip-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.tooltip-table th, .tooltip-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.tooltip-table .bg-green { background-color: #e8f5e9; color: #2e7d32; }
+.tooltip-table .bg-orange { background-color: #fff3e0; color: #ef6c00; }
+.tooltip-table .bg-red { background-color: #ffebee; color: #c62828; }
+.tooltip-table .bg-purple { background-color: #E6E6FA; color: #5D3FD3; }
+
+@keyframes fadeInTooltip {
+    from { opacity: 0; transform: translate(-50%, -5px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* Ajuste vital para celulares */
+@media (max-width: 600px) {
+    .tooltip-popover {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90vw;
+        max-width: 350px;
+    }
+    .tooltip-popover::before {
+        display: none; /* Quitamos la flechita en celulares porque es un modal flotante central */
+    }
+    @keyframes fadeInTooltip {
+        from { opacity: 0; transform: translate(-50%, -45%); }
+        to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+}
