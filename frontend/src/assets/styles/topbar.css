@@ -25,6 +25,9 @@
     justify-content: center;
     border-radius: 50%;
     transition: background-color 0.2s ease;
+    justify-content: center;
+    width: 28px;  /* NUEVO: Forzamos un ancho */
+    height: 28px;
 }
 .profile-button:hover {
     background-color: var(--secondary-color-blue-light);
