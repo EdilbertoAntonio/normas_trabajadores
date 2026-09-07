@@ -17,12 +17,23 @@
     color: var(--secondary-color-dark-gray);
     display: flex;
     align-items: center;
+    justify-content: center; /* NUEVO: Centra el icono horizontalmente */
+    width: 28px;  /* NUEVO: Forzamos un ancho */
+    height: 28px;
     border-radius: 50%;
     transition: background-color 0.2s, color 0.2s;
 }
 
 .tooltip-trigger:hover {
-    background-color: var(--secondary-color-blue-light);
+    background-color: var(--secondary-color-gray);
+    color: var(--primary-color-white); 
+    /* outline: none;   */
+}
+
+.tooltip-trigger:focus{
+    color: var(--primary-color-black); 
+    outline: none; 
+    /* box-shadow: 0 0 5px var(--secondary-color-gradient-blue);  */
 }
 
 .tooltip-trigger i {
@@ -36,7 +47,7 @@
     top: 30px; /* Aparece justo debajo del icono */
     left: 50%;
     transform: translateX(-50%);
-    width: 320px;
+    width: 400px;
     background-color: var(--primary-color-white);
     border: 1px solid var(--secondary-color-gradient-blue);
     border-radius: 8px;
@@ -104,9 +115,20 @@
 /* Estilos específicos para las tablas dentro del tooltip */
 .tooltip-table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+    /* border-collapse: collapse;
+    margin-top: 10px; */
+    /* padding: 5px; */
+    table-layout: fixed;
+    box-sizing: border-box;
 }
+
+/* .tooltip-table td:first-child {
+        width: 15%; 
+}
+    
+.tooltip-table td:last-child {
+        width: 15%; 
+} */
 
 .tooltip-table th, .tooltip-table td {
     padding: 8px;
@@ -137,6 +159,14 @@
     .tooltip-popover::before {
         display: none; /* Quitamos la flechita en celulares porque es un modal flotante central */
     }
+    .tooltip-table th, .tooltip-table td {
+        white-space: normal; /* Permite que el texto fluya y salte de línea de forma natural */
+        overflow-wrap: break-word; /* Evita que palabras muy largas rompan la tabla */
+        word-break: break-word; /* Respaldo para navegadores antiguos (iOS/Safari) */
+        font-size: 12px; /* Letra un poco más pequeña para que sea más fácil de leer en celular */
+        padding: 6px;
+    }
+
     @keyframes fadeInTooltip {
         from { opacity: 0; transform: translate(-50%, -45%); }
         to { opacity: 1; transform: translate(-50%, -50%); }

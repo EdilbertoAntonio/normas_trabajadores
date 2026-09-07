@@ -85,6 +85,8 @@
 @media (max-width: 768px) {
     .mobile-menu-btn {
         display: flex; /* Se muestra en celulares */
+        align-items: center; /* ¡NUEVO! Centra el icono verticalmente en el botón */
+        justify-content: center;
     }
     .topbar h2 {
         font-size: 1.2rem; /* Achicamos un poco el título para celulares */

@@ -48,6 +48,7 @@
     box-sizing: border-box;
     margin-bottom: 8px;
     min-width: 0;
+    height: 38px;
 }
 .form-container input:focus{
     border-color: var(--primary-color-blue); 
