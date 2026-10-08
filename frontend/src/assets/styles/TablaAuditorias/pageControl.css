@@ -35,14 +35,29 @@
     align-items: center;
     cursor: pointer;
     transition: all 0.3s ease;
-}
-.circle-button .material-icons {
     color: var(--primary-color-blue);
-    font-size: 35px;
 }
-.circle-button:hover {
+.circle-button .material-symbols-outlined {
+    color: inherit; /* MAGIA: Le dice al icono que copie el color del botón */
+    font-size: 30px; /* Ajustado ligeramente para que se vea centrado en 40px */
+}
+
+/* 2. HOVER ARREGLADO: Solo se activa si el botón NO está deshabilitado */
+.circle-button:not(:disabled):hover {
+    background-color: var(--secondary-color-ligth-gray); 
+}
+
+/* 3. ESTADO DESHABILITADO: Color gris, opacidad y cursor bloqueado */
+.circle-button:disabled {
+    border-color: var(--secondary-color-dark-gray); 
+    color: var(--secondary-color-dark-gray); /* Como el icono hereda el color, también se vuelve gris */
+    background-color: var(--primary-color-white);
+    cursor: not-allowed;
+    opacity: 0.5; /* Le da el aspecto transparente clásico de botón inactivo */
+}
+/* .circle-button:hover {
     background-color: var(--secondary-color-light-gray);
-}
+} */
 .page-indicator {
     display: flex;
     align-items: center;
@@ -74,7 +89,7 @@
         padding: 0;
         font-size: 15px;
     }
-    .circle-button .material-icons {
+    .circle-button .material-symbols-outlined {
         font-size: 25px;
     }
 }
